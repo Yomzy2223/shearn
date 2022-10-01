@@ -1,6 +1,5 @@
 import React from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
-import { PaymentRecord } from "../../components/cards/PaymentRecordCard";
 import MainHeader from "../../components/header";
 import BottomNav from "../../components/nav/BottomNav";
 import { Footer } from "../../components/texts/Footer";

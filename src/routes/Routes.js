@@ -1,6 +1,5 @@
 import { Routes, Route, Outlet } from "react-router-dom";
 import React from "react";
-import HomePage from "../pages/Home";
 import { SignIn, SignUp } from "../pages/Auth";
 import Dashboard from "../pages/Dashboard";
 import SharesInfo from "../pages/SharesInfo";

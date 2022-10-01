@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Divider, TextContainer } from "./styled";
 
-export const LinkTextsWithDivider = ({ text }) => {
+export const LinkTextsWithDivider = ({ text, style, small }) => {
   return (
     <TextContainer>
       {text.map((element, index) => {
@@ -14,7 +14,9 @@ export const LinkTextsWithDivider = ({ text }) => {
               to={element.to}
               style={{ textDecoration: "none", color: "inherit" }}
             >
-              <span>{element.text}</span>
+              <span style={{ ...style, fontSize: small ? "10px" : "" }}>
+                {element.text}
+              </span>
             </Link>
           </div>
         );

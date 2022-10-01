@@ -11,6 +11,7 @@ export const Container = styled.div`
   border-radius: 5px;
   color: white;
   min-width: 265px;
+  max-width: 360px;
 `;
 export const Header = styled.div`
   display: flex;

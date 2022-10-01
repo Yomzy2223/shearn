@@ -11,7 +11,7 @@ export const SignUp = () => {
   const navigate = useNavigate();
 
   const handleSignUp = () => {
-    navigate("/");
+    navigate("/dashboard");
   };
 
   return (

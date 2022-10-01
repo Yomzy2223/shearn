@@ -3,9 +3,10 @@ import styled from "styled-components";
 export const Input = styled.input`
   height: clamp(40px, 13vw, 56px);
   background-color: #00203f;
-  color: #b6adad;
+  /* color: #b6adad; */
+  color: white;
   font-size: clamp(14px, 1.5vw, 16px);
-  font-weight: 600;
+  font-weight: 500;
   border: 1px solid #56fe8f;
   border-radius: 5px;
   padding-inline: 15px;

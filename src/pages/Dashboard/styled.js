@@ -5,21 +5,7 @@ export const Container = styled.div`
   flex-flow: column;
   width: 100%;
   gap: 15px;
-`;
-
-export const Top = styled.div`
-  display: flex;
-  justify-content: center;
-  position: sticky;
-  top: 0;
-  background-color: #022d57;
-
-  > img {
-    max-height: 94px;
-    align-self: center;
-    justify-self: center;
-    margin: -10px 0 -21px;
-  }
+  padding-bottom: 50px;
 `;
 
 export const Body = styled.div`
@@ -28,6 +14,7 @@ export const Body = styled.div`
   gap: 34px;
   width: 100%;
   padding-inline: clamp(10px, 5vw, 20px);
+  margin-bottom: 10px;
 `;
 
 export const Section = styled.div`
@@ -103,5 +90,6 @@ export const HowItWorks = styled.div`
 export const Shares = styled.div`
   display: flex;
   flex-flow: row wrap;
+  justify-content: center;
   gap: 16px;
 `;

@@ -8,10 +8,8 @@ import {
   HowItWorks,
   Section,
   Shares,
-  Top,
   Transact,
 } from "./styled";
-import ShearnLogo from "../../assets/images/Shearn.svg";
 import { TextCarousel } from "../../components/carousel/Texts";
 import BlueContainer from "../../containers/BlueContainer";
 import DollarLogo from "../../assets/images/DollarLogo.svg";
@@ -20,14 +18,15 @@ import FundIcon from "../../assets/images/Fund.svg";
 import WithdrawIcon from "../../assets/images/Withdraw.svg";
 import SharesCard from "../../components/cards/SharesCard";
 import { allShares } from "../../utils/config";
+import MainHeader from "../../components/header";
+import BottomNav from "../../components/nav/BottomNav";
+import { Link } from "react-router-dom";
 import { Footer } from "../../components/texts/Footer";
 
 const Dashboard = () => {
   return (
     <Container>
-      <Top>
-        <img src={ShearnLogo} alt="" />
-      </Top>
+      <MainHeader />
       <Body>
         <Section>
           <ImagesCarousel />
@@ -46,11 +45,11 @@ const Dashboard = () => {
             </BalanceInfo>
           </BlueContainer>
           <Transact>
-            <TellerCard color="#8B8ABC">
+            <TellerCard color="#8B8ABC" path="/account/fund">
               <img src={FundIcon} alt="fund" />
               <p>Fund</p>
             </TellerCard>
-            <TellerCard color="#FF5858">
+            <TellerCard color="#FF5858" path="/account/withdraw">
               <img src={WithdrawIcon} alt="withdraw" />
               <p>Withdraw</p>
             </TellerCard>
@@ -87,12 +86,15 @@ const Dashboard = () => {
                 hourProfit={share.hourProfit}
                 lifeSpan={share.lifeSpan}
                 totalRevenue={share.totalRevenue}
+                path={share.title}
               />
             ))}
           </Shares>
-          <Footer />
+          {/* <Footer /> */}
         </Section>
       </Body>
+      <Footer small />
+      <BottomNav />
     </Container>
   );
 };

@@ -11,7 +11,7 @@ export const SignIn = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    navigate("/");
+    navigate("/dashboard");
   };
 
   return (

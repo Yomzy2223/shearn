@@ -3,15 +3,21 @@ import styled from "styled-components";
 import { LinkTextsWithDivider } from "..";
 import { ShearnLogo } from "../../../assets/images";
 
-export const Footer = () => {
+export const Footer = ({ imgStyle, textStyle, small }) => {
   return (
     <Bottom>
-      <img src={ShearnLogo} alt="Shares earn logo" />
+      <img
+        src={ShearnLogo}
+        alt="Shares earn logo"
+        style={{ ...imgStyle, width: small ? "60px" : "" }}
+      />
       <LinkTextsWithDivider
         text={[
           { text: "About Us", to: "/" },
           { text: "Investment", to: "/" },
         ]}
+        style={textStyle}
+        small={small}
       />
     </Bottom>
   );

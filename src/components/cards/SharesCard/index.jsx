@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { MainButton } from "../../botton";
 import { Body, Bottom, Container, Header, Info, ShareSummary } from "./styled";
 
@@ -9,7 +10,14 @@ const SharesCard = ({
   hourProfit,
   lifeSpan,
   totalRevenue,
+  path,
 }) => {
+  const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    navigate(`/shares/${path}`);
+  };
+
   return (
     <Container>
       <Header>
@@ -36,7 +44,7 @@ const SharesCard = ({
       </ShareSummary>
       <Bottom>
         {" "}
-        <MainButton text="Buy" />
+        <MainButton text="Buy" clickAction={handleNavigate} />
       </Bottom>
     </Container>
   );

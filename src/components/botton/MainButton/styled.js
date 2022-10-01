@@ -4,6 +4,7 @@ export const Button = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 
   background-color: #56fe8f;
   color: black;
@@ -16,4 +17,15 @@ export const Button = styled.button`
   border-radius: 5px;
   border: none;
   outline: none;
+  transition: 0.3s all ease;
+
+  &:hover {
+    transform: scale(1.01);
+  }
+  &:active {
+    transform: scale(0.99);
+  }
+  &:focus {
+    background-color: #78fca4;
+  }
 `;

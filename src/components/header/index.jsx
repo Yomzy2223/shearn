@@ -32,7 +32,7 @@ const Top = styled.div`
   position: sticky;
   top: 0;
   background-color: #022d57;
-  z-index: 4;
+  z-index: 10;
 
   > img {
     max-height: 94px;

@@ -23,6 +23,10 @@ export const SHImage = styled.div`
   justify-content: center;
   width: 100%;
   background-color: white;
+
+  img {
+    max-width: 100%;
+  }
 `;
 export const AboutInfo = styled.div`
   position: relative;

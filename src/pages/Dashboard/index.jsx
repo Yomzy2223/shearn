@@ -32,9 +32,9 @@ const Dashboard = () => {
           <ImagesCarousel />
         </Section>
         <Section>
-          <BlueContainer>
-            <TextCarousel />
-          </BlueContainer>
+          {/* <BlueContainer> */}
+          <TextCarousel />
+          {/* </BlueContainer> */}
           <BlueContainer>
             <BalanceInfo>
               <Balance>
@@ -89,6 +89,24 @@ const Dashboard = () => {
                 path={share.title}
               />
             ))}
+            <SharesCard
+              title="Coming soon..."
+              image="--"
+              price="--"
+              hourProfit="--"
+              lifeSpan="--"
+              totalRevenue="--"
+              path="--"
+            />
+            <SharesCard
+              title="Coming soon..."
+              image="--"
+              price="--"
+              hourProfit="--"
+              lifeSpan="--"
+              totalRevenue="--"
+              path="--"
+            />
           </Shares>
           {/* <Footer /> */}
         </Section>

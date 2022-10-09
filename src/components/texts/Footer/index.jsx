@@ -13,8 +13,8 @@ export const Footer = ({ imgStyle, textStyle, small }) => {
       />
       <LinkTextsWithDivider
         text={[
-          { text: "About Us", to: "/" },
-          { text: "Investment", to: "/" },
+          { text: "About Us", to: "/account/about" },
+          { text: "Investment", to: "/dashboard" },
         ]}
         style={textStyle}
         small={small}

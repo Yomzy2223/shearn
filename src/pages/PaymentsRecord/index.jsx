@@ -27,7 +27,7 @@ const PaymentsRecords = () => {
         )}
         {slicedPath === "account" && (
           <BasicInfo>
-            <p>My Balance</p>
+            <p>Total Income</p>
             <span>$500.00</span>
           </BasicInfo>
         )}

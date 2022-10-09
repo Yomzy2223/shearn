@@ -57,11 +57,11 @@ export const Info = styled.div`
   border: 1px solid #56fe8f;
   border-radius: 5px;
   padding: 12px 17px;
-  max-width: 300px;
+  max-width: 500px;
 
   > div {
     p {
-      line-height: 20px;
+      line-height: 25px;
     }
   }
   span {

@@ -4,6 +4,7 @@ import { MainButton } from "../../components/botton";
 import { SummaryCard } from "../../components/cards/Summary";
 import MainHeader from "../../components/header";
 import BottomNav from "../../components/nav/BottomNav";
+import { TextsWithLink } from "../../components/texts";
 import { Footer } from "../../components/texts/Footer";
 import { Section } from "../Dashboard/styled";
 import {
@@ -20,34 +21,38 @@ const Withdraw = () => {
       <MainHeader title="Withdraw" />
       <Body>
         <SummaryCard
-          text1="Already Returned"
+          text1="Total Income"
           text2="Daily Income"
           price1={300}
           price2={20}
         />
         <WithdrawAmount>
-          <p>Type the amount you want to withdraw.</p>
+          <p>Enter amount</p>
           <input type="number" />
           <MainButton text="Withdraw Now" />
-          <p>
-            You need to update your wallet address for withdrawal. If this is
-            the first time you are applying. Please go to "My Wallet Address"
-            and enter the information of your wallet address accurately.{" "}
-          </p>
+          <TextsWithLink
+            text={[
+              {
+                text: "If you are placing withdrawal for the first time, kindly go to",
+                link: { to: "/account/wallet-info", text: "My Wallet Address" },
+              },
+              {
+                text: "and fill in your address information (USDT Trc20).",
+                link: { to: "", text: "" },
+              },
+            ]}
+          />
         </WithdrawAmount>
         <WithdrawInfo>
           <img src={UnionIcon} alt="" />
           <WithdrawKeyInfo>
-            <p>You can withdraw your balance.</p>
+            <p>You can withdraw your total income.</p>
             <ol>
-              <li>Minimum withdrawal: $5</li>
+              <li>Minimum withdrawal: $3</li>
               <li>Withdrawal time: 24/7</li>
               <li>Arrival time: Same day.</li>
               <li>Charges: 7%</li>
             </ol>
-            <p>
-              Pass: The rebate balance can be transferred to available balance.
-            </p>
           </WithdrawKeyInfo>
         </WithdrawInfo>
       </Body>

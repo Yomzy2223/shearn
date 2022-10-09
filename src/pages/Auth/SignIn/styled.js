@@ -30,11 +30,13 @@ export const Main = styled.div`
   flex-flow: column;
   align-items: center;
   width: 100%;
+  gap: 50px;
 
   img {
     max-width: 200px;
   }
 `;
+
 export const Middle = styled.div`
   display: flex;
   flex-flow: column;
@@ -42,4 +44,13 @@ export const Middle = styled.div`
   justify-content: center;
   gap: 17px;
   width: 100%;
+`;
+
+export const ResetText = styled.p`
+  color: rgba(255, 255, 255, 0.57);
+  font-weight: 400;
+  font-size: clamp(20px, 1.4vw, 22px);
+  width: 90%;
+  text-align: center;
+  margin-top: -200px;
 `;

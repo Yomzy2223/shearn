@@ -2,9 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { TextContainer } from "./styled";
 
-export const TextsWithLink = ({ text }) => {
+export const TextsWithLink = ({ text, style }) => {
   return (
-    <TextContainer>
+    <TextContainer style={{ ...style }}>
       {text.map((element, index) => {
         return (
           <p key={index}>

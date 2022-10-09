@@ -19,9 +19,9 @@ const SharesCard = ({
   };
 
   return (
-    <Container>
+    <Container disable={title === "Coming soon..."}>
       <Header>
-        <img src={image} alt={title} />
+        {title !== "Coming soon..." && <img src={image} alt={title} />}
         <h2>{title}</h2>
       </Header>
       <ShareSummary>

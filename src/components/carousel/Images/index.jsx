@@ -4,6 +4,15 @@ import { Image } from "./styled";
 import ShearnImg from "../../../assets/images/ShearnImg.png";
 
 import "react-multi-carousel/lib/styles.css";
+import {
+  Funtuna,
+  Lenovo,
+  Lucid,
+  NewAge,
+  NIO,
+  Oraimo,
+  Tencent,
+} from "../../../assets/images";
 export const ImagesCarousel = () => {
   const responsive = {
     desktop: {
@@ -25,32 +34,13 @@ export const ImagesCarousel = () => {
 
   const images = [
     ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
-    ShearnImg,
+    Funtuna,
+    NewAge,
+    Oraimo,
+    Lenovo,
+    Tencent,
+    NIO,
+    Lucid,
   ];
 
   return (
@@ -59,6 +49,7 @@ export const ImagesCarousel = () => {
       // partialVisbile
       responsive={responsive}
       autoPlay
+      arrows={false}
       infinite
       draggable
       swipeable

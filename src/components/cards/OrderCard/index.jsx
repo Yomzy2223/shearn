@@ -33,13 +33,13 @@ const OrderCard = ({
                 Price: <span>${price}</span>
               </div>
               <div>
-                Hourly Income: <span>{hourly}</span>
+                Hourly Income: <span>${hourly}</span>
               </div>
               <div>
-                Total Income: $<span>{total}</span>
+                Total Income: <span>${total}</span>
               </div>
               <div>
-                Serving Time: <span>{servingTime}</span>
+                Span: <span>{servingTime}days</span>
               </div>
             </Info>
           </div>

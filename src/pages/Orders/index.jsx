@@ -15,20 +15,19 @@ const Orders = () => {
       <MainHeader />
       <Body>
         <SummaryCard
-          text1="Already Returned"
+          text1="Total Income"
           text2="Daily Income"
           price1={300}
           price2={20}
         />
         <Section>
           <ol>
-            <li>Daily revenue arrives at 02:00pm each day.</li>
-            <li>Earnings are always added directly to yout balance.</li>
+            <li>Daily dividend adds up to your total income every 24hrs.</li>
+            <li>The total income can be withdrawn any time (minimum $5).</li>
             <li>
-              The total income can be withdraw at any time when it exceeds 100.
+              Dividend stops adding up when the share's span time completes.
             </li>
-            <li>Your product will expire after it's Earning days.</li>
-            <li>Allows earning of multiple products at the same time.</li>
+            <li>You can have more than one shares at a time.</li>
           </ol>
         </Section>
         <OrdersContainer>

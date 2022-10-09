@@ -1,11 +1,11 @@
 import React from "react";
 import { Container, Main, Form, Inputs, Middle } from "./styled";
-import Logo from "../../../assets/images/ShearnLogo.png";
 import { PhoneNumberInput, PlainInput } from "../../../components/Input";
 import { MainButton } from "../../../components/botton";
 import { TextsWithLink } from "../../../components/texts";
 import { useNavigate } from "react-router-dom";
 import { Footer } from "../../../components/texts/Footer";
+import { ShearnLogo } from "../../../assets/images";
 
 export const SignIn = () => {
   const navigate = useNavigate();
@@ -18,10 +18,19 @@ export const SignIn = () => {
     <Container>
       <Form onSubmit={handleLogin}>
         <Main>
-          <img src={Logo} alt="Shares earn logo" />
+          <img src={ShearnLogo} alt="Shares earn logo" />
           <Inputs>
-            <PhoneNumberInput />
+            <PlainInput type="email" placeholder="Enter your email" />
             <PlainInput type="password" placeholder="Enter Password" />
+            <TextsWithLink
+              text={[
+                {
+                  text: "Forgot your password? ",
+                  link: { to: "/forgot-password", text: "Click here" },
+                },
+              ]}
+              style={{ alignSelf: "flex-end" }}
+            />
           </Inputs>
         </Main>
         <Middle>
@@ -40,3 +49,5 @@ export const SignIn = () => {
     </Container>
   );
 };
+
+//Zillow

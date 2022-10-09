@@ -1,3 +1,4 @@
+import Dialog from "@mui/material/Dialog";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import {
@@ -8,6 +9,7 @@ import {
 } from "../../assets/images";
 import { MainButton } from "../../components/botton";
 import MainHeader from "../../components/header";
+import BottomNav from "../../components/nav/BottomNav";
 import { allShares } from "../../utils/config";
 import {
   Body,
@@ -21,6 +23,7 @@ import {
 
 const SharesInfo = () => {
   const [quantity, setQuantity] = useState(0);
+  const [open, setOpen] = useState(false);
 
   window.onbeforeunload = () => {
     localStorage.setItem("quantity", quantity);
@@ -35,6 +38,14 @@ const SharesInfo = () => {
 
   const handleQuantity = (e) => {
     setQuantity(e.target.value);
+  };
+
+  const handleModalOpen = () => {
+    setOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -100,8 +111,12 @@ const SharesInfo = () => {
             when it reached the minimum withdrawal threshold.
           </p>
         </DetailedInfo>
-        <MainButton text="Buy Now" />
+        <MainButton text="Buy Now" clickAction={handleModalOpen} />
+        <Dialog onClose={handleModalClose} open={open}>
+          <p>I am the modal</p>
+        </Dialog>
       </Body>
+      <BottomNav />
     </Container>
   );
 };

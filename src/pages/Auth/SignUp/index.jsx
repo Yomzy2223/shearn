@@ -20,7 +20,9 @@ export const SignUp = () => {
         <Main>
           <img src={Logo} alt="Shares earn logo" />
           <Inputs>
-            <PhoneNumberInput />
+            <PlainInput placeholder="Enter full name" />
+            <PlainInput placeholder="Enter email" />
+            {/* <PhoneNumberInput /> */}
             <PlainInput
               type="password"
               placeholder="Password (at least 6 characters)"

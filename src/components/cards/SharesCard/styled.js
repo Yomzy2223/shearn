@@ -12,6 +12,7 @@ export const Container = styled.div`
   color: white;
   min-width: 265px;
   max-width: 360px;
+  opacity: ${({ disable }) => (disable ? "0.7" : "")};
 `;
 export const Header = styled.div`
   display: flex;

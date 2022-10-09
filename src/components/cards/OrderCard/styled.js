@@ -6,7 +6,7 @@ export const Container = styled.div`
   flex: 1;
   min-height: 200px;
   min-width: 250px;
-  max-width: 400px;
+  max-width: 350px;
 `;
 export const Title = styled.div`
   display: flex;

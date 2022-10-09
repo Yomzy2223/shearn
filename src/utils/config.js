@@ -116,7 +116,7 @@ export const AccountPageLinks = [
     link: "",
   },
   {
-    text: "Referral Program",
+    text: "Affliate Program",
     icon: ReferralIcon,
     link: "/account/referrals",
   },

@@ -13,13 +13,13 @@ const WalletInfo = () => {
       <Body>
         <p>
           Please enter your wallet address details below to withdraw your
-          balance into.
+          income.
         </p>
         <InputWrapper>
-          <p>* Wallet Address (TRC20)</p>
+          <p>* Wallet Address (Trc20)</p>
           <PlainInput
             type="text"
-            placeholder="Enter your wallet address (USDT onl)"
+            placeholder="Enter your wallet address (USDT Trc20)"
           />
         </InputWrapper>
         <Bottom>

@@ -18,7 +18,7 @@ const Referrals = () => {
 
   return (
     <Container>
-      <MainHeader title="Referral" />
+      <MainHeader title="Affliate" />
       <Body>
         <SummaryCard
           text1="Total Income"
@@ -42,7 +42,8 @@ const Referrals = () => {
         </ReferralCode>
         <Info>
           <p>
-            You get <span>10%</span> of your referrals purchases.
+            You get <span>10%</span> commision from your referrals first
+            purchase.
           </p>
           <div>
             <p> When your referral buys shares of:</p>
@@ -72,14 +73,14 @@ const Referrals = () => {
         <ReferralTable>
           <thead>
             <tr>
-              <td colSpan={3}>Referrals</td>
+              <td colSpan={3}>Affliate</td>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Referrals</td>
+              <td>Names</td>
               <td>Shares bought</td>
-              <td>My Commission</td>
+              <td>Commission</td>
             </tr>
             <tr>
               <td>Ohracu</td>

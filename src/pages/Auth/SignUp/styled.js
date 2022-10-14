@@ -9,6 +9,7 @@ export const Container = styled.div`
   width: 100%;
 `;
 export const Form = styled.form`
+  position: relative;
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -42,4 +43,14 @@ export const Middle = styled.div`
   justify-content: center;
   gap: 17px;
   width: 100%;
+`;
+
+export const MainError = styled.div`
+  font-size: 13px;
+  top: 25px;
+  right: 0;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+  background-color: red;
 `;

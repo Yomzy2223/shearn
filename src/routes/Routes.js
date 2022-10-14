@@ -1,6 +1,8 @@
 import { Routes, Route, Outlet } from "react-router-dom";
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { SignIn, SignUp } from "../pages/Auth";
+import Protected from "./Protected";
+import { useSelector } from "react-redux";
 
 const Dashboard = lazy(() => import("../pages/Dashboard"));
 const SharesInfo = lazy(() => import("../pages/SharesInfo"));
@@ -26,17 +28,44 @@ const Reset = lazy(() => import("../pages/Auth/SignIn/Reset"));
 const NewPassword = lazy(() => import("../pages/Auth/SignIn/NewPassword"));
 
 const AppRoutes = () => {
+  let userStoreInfo = useSelector((store) => store.userInfo.authInfo);
+  console.log(userStoreInfo);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user);
+
+  const [userInfo, setUserInfo] = useState();
+
+  // Triggers a state to have a page reload (updated user get passed thereafter)
+  useEffect(() => {
+    setUserInfo(userStoreInfo);
+  }, [userStoreInfo]);
+
   return (
     <Suspense>
       <Routes>
         <Route path="/" element={<Outlet />}>
           <Route index element={<SignIn />} />
           <Route path="register" element={<SignUp />} />
-          <Route path="login" element={<SignIn />} />
+          <Route
+            path="login"
+            element={
+              <Protected isVerified={!user?.apiKey} path="/dashboard">
+                <SignIn />
+              </Protected>
+            }
+          />
           <Route path="forgot-password" element={<ForgotPassword />} />
           <Route path="new-password" element={<NewPassword />} />
           <Route path="reset" element={<Reset />} />
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route
+            path="dashboard"
+            element={
+              <Protected isVerified={user?.apiKey}>
+                <Dashboard />
+              </Protected>
+            }
+          />
           <Route path="shares" element={<Outlet />}>
             <Route path=":share" element={<SharesInfo />} />
           </Route>

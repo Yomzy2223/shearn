@@ -9,3 +9,14 @@
   max-width: 1000px;
   margin: auto;
 }
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+p {
+  margin: 0;
+}

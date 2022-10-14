@@ -54,3 +54,13 @@ export const ResetText = styled.p`
   text-align: center;
   margin-top: -200px;
 `;
+
+export const MainError = styled.div`
+  font-size: 13px;
+  top: 25px;
+  right: 0;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+  background-color: red;
+`;

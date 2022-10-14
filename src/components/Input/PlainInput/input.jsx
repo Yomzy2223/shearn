@@ -1,6 +1,11 @@
 import React from "react";
-import { Input } from "./styled";
+import { Error, Input, InputWrapper } from "./styled";
 
-export const PlainInput = ({ type, placeholder }) => {
-  return <Input type={type} placeholder={placeholder} />;
+export const PlainInput = ({ name, type, placeholder, register, error }) => {
+  return (
+    <InputWrapper>
+      <Error>{error}</Error>
+      <Input type={type} placeholder={placeholder} {...register(name)} />
+    </InputWrapper>
+  );
 };

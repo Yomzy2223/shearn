@@ -1,3 +1,5 @@
+import * as yup from "yup";
+
 import {
   DollarIcon,
   Funtuna,
@@ -131,3 +133,30 @@ export const AccountPageLinks = [
     link: "/login",
   },
 ];
+
+export const loginSchema = yup.object().shape({
+  email: yup.string().email("Please enter a valid email").required(),
+  password: yup.string().min(5).max(32).required(),
+});
+
+export const registerSchema = yup.object().shape({
+  full_name: yup
+    .string("Please enter a valid name")
+    .required("Full name is required"),
+  email: yup.string().email("Please enter a valid email").required(),
+  password: yup.string().min(5).max(32).required(),
+  confirm_password: yup
+    .string()
+    .label("confirm password")
+    .required("You must confirm password")
+    .oneOf([yup.ref("password"), null], "Passwords must match"),
+});
+
+export const newPasswordSchema = yup.object().shape({
+  password: yup.string().min(5).max(32).required(),
+  confirm_password: yup
+    .string()
+    .label("confirm password")
+    .required()
+    .oneOf([yup.ref("password"), null], "Passwords must match"),
+});

@@ -1,9 +1,18 @@
 import styled from "styled-components";
 
+export const InputWrapper = styled.div`
+  width: 100%;
+`;
+
+export const Error = styled.div`
+  color: red;
+  font-size: 12px;
+  margin-bottom: 10px;
+`;
+
 export const Input = styled.input`
   height: clamp(40px, 13vw, 56px);
   background-color: #00203f;
-  /* color: #b6adad; */
   color: white;
   font-size: clamp(14px, 1.5vw, 16px);
   font-weight: 500;

@@ -22,6 +22,8 @@ import MainHeader from "../../components/header";
 import BottomNav from "../../components/nav/BottomNav";
 import { Link } from "react-router-dom";
 import { Footer } from "../../components/texts/Footer";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../../utils/firebase";
 
 const Dashboard = () => {
   return (
@@ -86,7 +88,7 @@ const Dashboard = () => {
                 hourProfit={share.hourProfit}
                 lifeSpan={share.lifeSpan}
                 totalRevenue={share.totalRevenue}
-                path={share.title}
+                path={`shares/${share.title}`}
               />
             ))}
             <SharesCard
@@ -96,7 +98,7 @@ const Dashboard = () => {
               hourProfit="--"
               lifeSpan="--"
               totalRevenue="--"
-              path="--"
+              path="dashboard"
             />
             <SharesCard
               title="Coming soon..."
@@ -105,7 +107,7 @@ const Dashboard = () => {
               hourProfit="--"
               lifeSpan="--"
               totalRevenue="--"
-              path="--"
+              path="dashboard"
             />
           </Shares>
           {/* <Footer /> */}

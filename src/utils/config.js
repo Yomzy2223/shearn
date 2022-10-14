@@ -127,11 +127,6 @@ export const AccountPageLinks = [
     icon: InfoIcon,
     link: "/account/about",
   },
-  {
-    text: "Log Out",
-    icon: LogoutIcon,
-    link: "/login",
-  },
 ];
 
 export const loginSchema = yup.object().shape({

@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import { Container } from "./styled";
 import { IoIosArrowForward } from "react-icons/io";
 
-const AccountMainCard = ({ icon, text, link, $border }) => {
+const AccountMainCard = ({ icon, text, link, $border, action }) => {
   return (
-    <Container to={link} $border={$border}>
+    <Container to={link} $border={$border} onClick={action}>
       <img src={icon} alt="" />
       <div>
         <span>{text}</span>

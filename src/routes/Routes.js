@@ -3,6 +3,8 @@ import React, { lazy, Suspense, useEffect, useState } from "react";
 import { SignIn, SignUp } from "../pages/Auth";
 import Protected from "./Protected";
 import { useSelector } from "react-redux";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const Dashboard = lazy(() => import("../pages/Dashboard"));
 const SharesInfo = lazy(() => import("../pages/SharesInfo"));
@@ -29,14 +31,12 @@ const NewPassword = lazy(() => import("../pages/Auth/SignIn/NewPassword"));
 
 const AppRoutes = () => {
   let userStoreInfo = useSelector((store) => store.userInfo.authInfo);
-  console.log(userStoreInfo);
 
   const user = JSON.parse(localStorage.getItem("user"));
-  console.log(user);
 
   const [userInfo, setUserInfo] = useState();
 
-  // Triggers a state to have a page reload (updated user get passed thereafter)
+  // Triggers a state to have a page reload (updated user get passed thereafter, as a result of the reload)
   useEffect(() => {
     setUserInfo(userStoreInfo);
   }, [userStoreInfo]);
@@ -45,8 +45,22 @@ const AppRoutes = () => {
     <Suspense>
       <Routes>
         <Route path="/" element={<Outlet />}>
-          <Route index element={<SignIn />} />
-          <Route path="register" element={<SignUp />} />
+          <Route
+            index
+            element={
+              <Protected isVerified={!user?.apiKey} path="/dashboard">
+                <SignIn />
+              </Protected>
+            }
+          />
+          <Route
+            path="register"
+            element={
+              <Protected isVerified={!user?.apiKey} path="/dashboard">
+                <SignUp />
+              </Protected>
+            }
+          />
           <Route
             path="login"
             element={
@@ -66,11 +80,32 @@ const AppRoutes = () => {
               </Protected>
             }
           />
-          <Route path="shares" element={<Outlet />}>
+          <Route
+            path="shares"
+            element={
+              <Protected isVerified={user?.apiKey}>
+                <Outlet />
+              </Protected>
+            }
+          >
             <Route path=":share" element={<SharesInfo />} />
           </Route>
-          <Route path="orders" element={<Orders />} />
-          <Route path="account" element={<Outlet />}>
+          <Route
+            path="orders"
+            element={
+              <Protected isVerified={user?.apiKey}>
+                <Orders />
+              </Protected>
+            }
+          />
+          <Route
+            path="account"
+            element={
+              <Protected isVerified={user?.apiKey}>
+                <Outlet />
+              </Protected>
+            }
+          >
             <Route index element={<Account />} />
             <Route path="withdraw" element={<Withdraw />} />
             <Route path="wallet-info" element={<WalletInfo />} />

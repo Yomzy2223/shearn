@@ -15,7 +15,7 @@ const SharesCard = ({
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate(`/shares/${path}`);
+    navigate(`/${path}`);
   };
 
   return (
@@ -44,7 +44,11 @@ const SharesCard = ({
       </ShareSummary>
       <Bottom>
         {" "}
-        <MainButton text="Buy" clickAction={handleNavigate} />
+        <MainButton
+          text="Buy"
+          clickAction={handleNavigate}
+          disabled={title === "Coming soon..." ? true : false}
+        />
       </Bottom>
     </Container>
   );

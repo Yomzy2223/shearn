@@ -6,6 +6,12 @@ export const Button = styled.button`
   align-items: center;
   cursor: pointer;
 
+  &:disabled {
+    &:hover {
+      transform: scale(1);
+    }
+  }
+
   background-color: #56fe8f;
   color: black;
 

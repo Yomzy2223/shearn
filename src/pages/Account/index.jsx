@@ -1,3 +1,4 @@
+import { signOut } from "firebase/auth";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { LogoutIcon, ShearnLogo } from "../../assets/images";
@@ -5,6 +6,8 @@ import AccountMainCard from "../../components/cards/AccountMain";
 import { SummaryCard } from "../../components/cards/Summary";
 import BottomNav from "../../components/nav/BottomNav";
 import { Footer } from "../../components/texts/Footer";
+import { setAuthInfo } from "../../redux/Slices";
+import { store } from "../../redux/Store";
 import { AccountPageLinks } from "../../utils/config";
 import { auth } from "../../utils/firebase";
 import { Body, Container, Header, Info } from "./styled";
@@ -12,9 +15,13 @@ import { Body, Container, Header, Info } from "./styled";
 const Account = () => {
   const navigate = useNavigate();
 
+  // Log the user out and navigate to the login page
   const handleLogout = () => {
     localStorage.clear();
-    auth().signOut();
+    signOut(auth).then(() => {
+      store.dispatch(setAuthInfo(""));
+      navigate("/login");
+    });
   };
 
   return (

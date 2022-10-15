@@ -1,4 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import { updatePassword } from "firebase/auth";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +8,7 @@ import { MainButton } from "../../../components/botton";
 import { PlainInput } from "../../../components/Input";
 import { Footer } from "../../../components/texts/Footer";
 import { loginSchema, newPasswordSchema } from "../../../utils/config";
+import { auth } from "../../../utils/firebase";
 import { Container, Form, Inputs, Main, Middle } from "./styled";
 
 const NewPassword = () => {
@@ -19,7 +21,19 @@ const NewPassword = () => {
     reset,
   } = useForm({ resolver: yupResolver(newPasswordSchema) });
 
-  const handlePasswordChange = () => {
+  const user = auth.currentUser;
+
+  const handlePasswordChange = (formData) => {
+    updatePassword(user, formData.password)
+      .then(() => {
+        console.log("Successful");
+        // Update successful.
+      })
+      .catch((error) => {
+        console.log("not successful", error.code);
+        // An error ocurred
+        // ...
+      });
     navigate("/dashboard");
   };
 

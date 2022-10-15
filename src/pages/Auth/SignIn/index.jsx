@@ -39,11 +39,13 @@ export const SignIn = () => {
       })
       .catch((error) => {
         const errorCode = error.code;
-        const errorMessage = error.message;
+
         if (errorCode === "auth/wrong-password")
           setMainError("You entered a wrong password");
         else if (errorCode === "auth/user-not-found")
           setMainError("Email is not registered");
+        else if (errorCode === "auth/network-request-failed")
+          setMainError("Please check your internet connection");
         else {
           setMainError(errorCode);
         }

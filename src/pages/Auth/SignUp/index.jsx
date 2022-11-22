@@ -9,13 +9,19 @@ import { Footer } from "../../../components/texts/Footer";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema, registerSchema } from "../../../utils/config";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../utils/firebase";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+} from "firebase/auth";
+import { auth, db } from "../../../utils/firebase";
 import { store } from "../../../redux/Store";
 import { setAuthInfo } from "../../../redux/Slices";
+import { setDoc } from "firebase/firestore";
 
 export const SignUp = () => {
   const [mainError, setMainError] = useState();
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -28,18 +34,24 @@ export const SignUp = () => {
 
   // Signs a user up
   const handleSignUp = (formData) => {
+    setLoading(true);
     createUserWithEmailAndPassword(auth, formData.email, formData.password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
         localStorage.setItem("user", JSON.stringify(user));
         store.dispatch(setAuthInfo(user));
-        console.log(user);
+        sendEmailVerification(auth.currentUser).then(() => {
+          // Email verification sent!
+          console.log("Email verification sent");
+        });
+        // saveInfoToDb(formData);
         navigate("/dashboard");
-        // ...
+        setLoading(false);
+        console.log(user);
       })
-      // run, if error returned
       .catch((error) => {
+        setLoading(false);
         const errorCode = error.code;
         if (errorCode === "auth/email-already-in-use") {
           setMainError(
@@ -52,6 +64,42 @@ export const SignUp = () => {
           setMainError();
         }, 5000);
         console.log(errorCode);
+        console.log(error);
+      });
+    // setLoading(false);
+    updateDisplayName(formData.full_name);
+  };
+
+  // Set user's display name
+  const updateDisplayName = (fullName) => {
+    let firstName = fullName.split(" ")[1];
+    console.log(firstName);
+    console.log(auth);
+    updateProfile(auth.currentUser, {
+      displayName: firstName,
+    })
+      .then(() => {
+        // Profile updated!
+        console.log("updated");
+      })
+      .catch((error) => {
+        // An error occurred
+        console.log(error);
+      });
+  };
+
+  // Save user info to the database
+  const saveInfoToDb = (formData) => {
+    const usersRef = (db, "users", formData.email);
+    setDoc(usersRef, {
+      fullName: formData.full_name,
+      email: formData.email,
+    })
+      .then(() => {
+        console.log("Saved to database");
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
 
@@ -91,7 +139,7 @@ export const SignUp = () => {
         <Middle>
           {mainError && <MainError>{mainError}</MainError>}
 
-          <MainButton text="Register" type="submit" />
+          <MainButton text="Register" type="submit" loading={loading} />
           <TextsWithLink
             text={[
               {

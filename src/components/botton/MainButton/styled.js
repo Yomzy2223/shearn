@@ -7,6 +7,7 @@ export const Button = styled.button`
   cursor: pointer;
 
   &:disabled {
+    background-color: #78fca4;
     &:hover {
       transform: scale(1);
     }

@@ -9,13 +9,14 @@ import { ShearnLogo } from "../../../assets/images";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../../../utils/config";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../utils/firebase";
+import { signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth, db } from "../../../utils/firebase";
 import { store } from "../../../redux/Store";
 import { setAuthInfo } from "../../../redux/Slices";
 
 export const SignIn = () => {
   const [mainError, setMainError] = useState();
+  const [loading, setLoading] = useState();
 
   const navigate = useNavigate();
   const {
@@ -27,6 +28,7 @@ export const SignIn = () => {
 
   // Logs a user in
   const handleLogin = (formData) => {
+    setLoading(true);
     signInWithEmailAndPassword(auth, formData.email, formData.password)
       .then((userCredential) => {
         // Signed in
@@ -36,8 +38,10 @@ export const SignIn = () => {
         console.log(user);
         navigate("/dashboard");
         // ...
+        setLoading(false);
       })
       .catch((error) => {
+        setLoading(false);
         const errorCode = error.code;
 
         if (errorCode === "auth/wrong-password")
@@ -89,7 +93,7 @@ export const SignIn = () => {
         <Middle>
           {mainError && <MainError>{mainError}</MainError>}
 
-          <MainButton text="Login" />
+          <MainButton text="Login" loading={loading} />
           <TextsWithLink
             text={[
               {

@@ -52,6 +52,8 @@ export const AmountCard = styled.div`
 `;
 
 export const Input = styled.div`
+  display: flex;
+  align-items: center;
   position: relative;
   color: black;
   width: 100%;
@@ -67,7 +69,7 @@ export const Input = styled.div`
 
   span {
     position: absolute;
-    top: 14px;
+    top: 13px;
     left: 15px;
     color: black;
     font-size: clamp(13px, 1.4vw, 15px);

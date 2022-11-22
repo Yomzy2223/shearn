@@ -14,6 +14,7 @@ import { Container, Form, Inputs, Main, MainError, Middle } from "./styled";
 
 const ForgotPassword = () => {
   const [mainError, setMainError] = useState();
+  const [loading, setLoading] = useState();
 
   const navigate = useNavigate();
 
@@ -25,14 +26,17 @@ const ForgotPassword = () => {
   } = useForm({ resolver: yupResolver(forgotPasswordSchema) });
 
   const handleEmailVerify = (formData) => {
+    setLoading(true);
     sendPasswordResetEmail(auth, formData.email)
       .then((d) => {
         console.log(d);
         navigate("/reset");
+        setLoading(false);
         // Password reset email sent!
         // ..
       })
       .catch((error) => {
+        setLoading(false);
         if (error.code === "auth/user-not-found")
           setMainError("Email does not exist");
         else if (error.code === "auth/network-request-failed")
@@ -64,7 +68,7 @@ const ForgotPassword = () => {
         <Middle>
           {mainError && <MainError>{mainError}</MainError>}
 
-          <MainButton text="Continue" />
+          <MainButton text="Continue" loading={loading} />
         </Middle>
       </Form>
       <Footer />

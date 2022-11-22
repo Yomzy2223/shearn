@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { updatePassword } from "firebase/auth";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { ShearnLogo } from "../../../assets/images";
@@ -13,6 +13,7 @@ import { Container, Form, Inputs, Main, Middle } from "./styled";
 
 const NewPassword = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState();
 
   const {
     register,
@@ -24,16 +25,20 @@ const NewPassword = () => {
   const user = auth.currentUser;
 
   const handlePasswordChange = (formData) => {
+    setLoading(true);
     updatePassword(user, formData.password)
       .then(() => {
         console.log("Successful");
         // Update successful.
+        setLoading(false);
       })
       .catch((error) => {
+        setLoading(false);
         console.log("not successful", error.code);
         // An error ocurred
         // ...
       });
+
     navigate("/dashboard");
   };
 
@@ -60,7 +65,7 @@ const NewPassword = () => {
           </Inputs>
         </Main>
         <Middle>
-          <MainButton text="Login" />
+          <MainButton text="Login" loading={loading} />
         </Middle>
       </Form>
       <Footer />

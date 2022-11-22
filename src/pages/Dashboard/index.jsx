@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ImagesCarousel } from "../../components/carousel";
 import {
   Balance,
@@ -23,9 +23,42 @@ import BottomNav from "../../components/nav/BottomNav";
 import { Link } from "react-router-dom";
 import { Footer } from "../../components/texts/Footer";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../../utils/firebase";
+import { auth, db } from "../../utils/firebase";
+import { collection, getDocs } from "firebase/firestore";
+import { Puff } from "react-loading-icons";
 
 const Dashboard = () => {
+  const [shares, setShares] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const getProducts = async () => {
+    const products = await getDocs(collection(db, "products"));
+    return products.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  };
+
+  const mergeProductsInfo = (primaryData, secondaryData) => {
+    let merged = [];
+    primaryData.forEach((data1, index) => {
+      secondaryData.forEach((data2) => {
+        if (data1.title === data2.title) merged[index] = { ...data1, ...data2 };
+      });
+    });
+    return merged;
+  };
+
+  const handleShares = async () => {
+    setLoading(true);
+    const dbShares = await getProducts();
+    setLoading(false);
+    const merged = mergeProductsInfo(dbShares, allShares);
+    setShares(merged);
+    console.log(merged);
+  };
+
+  useEffect(() => {
+    handleShares();
+  }, []);
+
   return (
     <Container>
       <MainHeader />
@@ -72,43 +105,52 @@ const Dashboard = () => {
                 It starts to create your income on a daily basis by % of shares
                 earned.
               </li>
-              <li>Withdraw the income whenever it's above 1000.</li>
+              <li>Withdraw the income whenever it's above $10.</li>
               <li>Stably earn 5 times of your investment till the end.</li>
             </ol>
           </HowItWorks>
         </Section>
         <Section>
           <Shares>
-            {allShares.map((share, index) => (
+            {loading && (
+              <Puff stroke="#56FE8F" fill="#56FE8F" width={60} height={60} />
+            )}
+            {shares
+              .sort((a, b) => a.price - b.price)
+              .map((share, index) => (
+                <SharesCard
+                  key={share.id}
+                  title={share.title}
+                  image={share.image}
+                  price={share.price}
+                  hourProfit={share.hourProfit}
+                  lifeSpan={share.lifeSpan}
+                  totalRevenue={share.revenue}
+                  path={`shares/${share.title}`}
+                />
+              ))}
+            {!loading && (
               <SharesCard
-                key={index}
-                title={share.title}
-                image={share.image}
-                price={share.price}
-                hourProfit={share.hourProfit}
-                lifeSpan={share.lifeSpan}
-                totalRevenue={share.totalRevenue}
-                path={`shares/${share.title}`}
+                title="Coming soon..."
+                image="--"
+                price="--"
+                hourProfit="--"
+                lifeSpan="--"
+                totalRevenue="--"
+                path="dashboard"
               />
-            ))}
-            <SharesCard
-              title="Coming soon..."
-              image="--"
-              price="--"
-              hourProfit="--"
-              lifeSpan="--"
-              totalRevenue="--"
-              path="dashboard"
-            />
-            <SharesCard
-              title="Coming soon..."
-              image="--"
-              price="--"
-              hourProfit="--"
-              lifeSpan="--"
-              totalRevenue="--"
-              path="dashboard"
-            />
+            )}
+            {!loading && (
+              <SharesCard
+                title="Coming soon..."
+                image="--"
+                price="--"
+                hourProfit="--"
+                lifeSpan="--"
+                totalRevenue="--"
+                path="dashboard"
+              />
+            )}
           </Shares>
           {/* <Footer /> */}
         </Section>

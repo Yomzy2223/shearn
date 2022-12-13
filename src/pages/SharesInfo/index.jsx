@@ -1,5 +1,5 @@
 import Dialog from "@mui/material/Dialog";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   DollarIcon,
@@ -9,8 +9,11 @@ import {
 } from "../../assets/images";
 import { MainButton } from "../../components/botton";
 import MainHeader from "../../components/header";
+import Modal from "../../components/modal";
 import BottomNav from "../../components/nav/BottomNav";
 import { allShares } from "../../utils/config";
+import { getProductsFromDb } from "../../utils/dbCalls";
+import { mergeProductsInfo } from "../../utils/globalFunctions";
 import {
   Body,
   Container,
@@ -24,6 +27,10 @@ import {
 const SharesInfo = () => {
   const [quantity, setQuantity] = useState(0);
   const [open, setOpen] = useState(false);
+  const [shareInfo, setShareInfo] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const { share } = useParams();
 
   window.onbeforeunload = () => {
     localStorage.setItem("quantity", quantity);
@@ -33,8 +40,23 @@ const SharesInfo = () => {
     setQuantity(localQuantity);
   };
 
-  const { share } = useParams();
-  const selectedShare = allShares.find((selected) => selected.title === share);
+  const handleShares = async () => {
+    setLoading(true);
+    const dbShares = await getProductsFromDb();
+    const shareInfoFromDb = dbShares.find(
+      (selected) => selected.title === share
+    );
+    const selectedShare = allShares.find(
+      (selected) => selected.title === share
+    );
+    const merged = { ...selectedShare, ...shareInfoFromDb };
+    setShareInfo(merged);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    handleShares();
+  }, []);
 
   const handleQuantity = (e) => {
     setQuantity(e.target.value);
@@ -53,27 +75,27 @@ const SharesInfo = () => {
       <MainHeader title="Products" />
       <Body>
         <Image>
-          <p>{selectedShare.title}</p>
-          <img src={selectedShare.image} alt={selectedShare.title} />
+          <p>{shareInfo.title}</p>
+          <img src={shareInfo.image} alt={shareInfo.title} />
         </Image>
         <KeyInfo>
           <p>
             {" "}
-            <img src={PriceIcon} alt="" /> Price: ${selectedShare.price}
+            <img src={PriceIcon} alt="" /> Price: ${shareInfo.price}
           </p>
           <p>
             {" "}
             <img src={HourlyIcon} alt="" /> Hourly Income: $
-            {selectedShare.hourProfit}
+            {shareInfo.hourProfit}
           </p>
           <p>
             {" "}
             <img src={DollarIcon} alt="" /> Total Income:{" "}
-            {selectedShare.totalRevenue}
+            {shareInfo.totalRevenue}
           </p>
           <p>
             {" "}
-            <img src={TimeIcon} alt="" /> Serving Time: {selectedShare.lifeSpan}
+            <img src={TimeIcon} alt="" /> Serving Time: {shareInfo.lifeSpan}
           </p>
         </KeyInfo>
         <QuantityWrapper>
@@ -96,25 +118,27 @@ const SharesInfo = () => {
         </QuantityWrapper>
         <DetailedInfo>
           <p>
-            {selectedShare.title} is {selectedShare.pre} Share Earn's{" "}
-            {selectedShare.post} plan that we provide to the client.
+            {shareInfo.title} is {shareInfo.pre} Share Earn's {shareInfo.post}{" "}
+            plan.
           </p>
           <p>
-            The clients invests ${selectedShare.price} to obtain $
-            {selectedShare.hourProfit} hourly income continuously for{" "}
-            {selectedShare.lifeSpan} days and recieve $
-            {selectedShare.totalRevenue} as total in the end.
+            The clients invests ${shareInfo.price} to obtain $
+            {shareInfo.hourProfit} hourly income continuously for{" "}
+            {shareInfo.lifeSpan} days and recieve ${shareInfo.revenue} as total
+            in the end.
           </p>
           <p>
-            The daily income will be added automatically to you Balance in Share
-            Earn account at 2:00pm everyday and is withdrawable around the clock
-            when it reached the minimum withdrawal threshold.
+            The daily income will be added automatically to your balance every
+            24hrs. It is withdrawable when it reaches the minimum withdrawal
+            threshold.
           </p>
         </DetailedInfo>
         <MainButton text="Buy Now" clickAction={handleModalOpen} />
-        <Dialog onClose={handleModalClose} open={open}>
-          <p>I am the modal</p>
-        </Dialog>
+        <Modal
+          text="Purchase Successful"
+          open={open}
+          handleModalClose={handleModalClose}
+        />
       </Body>
       <BottomNav />
     </Container>

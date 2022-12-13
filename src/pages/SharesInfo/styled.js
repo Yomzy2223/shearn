@@ -5,6 +5,7 @@ export const Container = styled.div`
   flex-flow: column;
   color: white;
   gap: 15px;
+  width: 100%;
 `;
 
 export const Body = styled.div`

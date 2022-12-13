@@ -10,7 +10,7 @@ export const MainButton = ({ text, clickAction, type, disabled, loading }) => {
       disabled={disabled || loading}
     >
       {loading ? (
-        <TailSpin stroke="#6a6a6a" fill="#fff" width={40} height={40} />
+        <TailSpin stroke="#6a6a6a" fill="#fff" width={30} height={30} />
       ) : (
         text
       )}

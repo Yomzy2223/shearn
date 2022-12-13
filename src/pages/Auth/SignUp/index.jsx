@@ -17,7 +17,12 @@ import {
 import { auth, db } from "../../../utils/firebase";
 import { store } from "../../../redux/Store";
 import { setAuthInfo } from "../../../redux/Slices";
-import { setDoc } from "firebase/firestore";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
+import {
+  saveRegInfoToDb,
+  setBalanceToDb,
+  updateBalanceToDb,
+} from "../../../utils/dbCalls";
 
 export const SignUp = () => {
   const [mainError, setMainError] = useState();
@@ -45,11 +50,12 @@ export const SignUp = () => {
           // Email verification sent!
           console.log("Email verification sent");
         });
-        // saveInfoToDb(formData);
+        saveRegInfoToDb(formData);
+        setBalanceToDb(0, formData.email);
         navigate("/dashboard");
         setLoading(false);
-        console.log(user);
       })
+      .then(() => updateDisplayName(formData.full_name))
       .catch((error) => {
         setLoading(false);
         const errorCode = error.code;
@@ -66,15 +72,11 @@ export const SignUp = () => {
         console.log(errorCode);
         console.log(error);
       });
-    // setLoading(false);
-    updateDisplayName(formData.full_name);
   };
 
   // Set user's display name
   const updateDisplayName = (fullName) => {
     let firstName = fullName.split(" ")[1];
-    console.log(firstName);
-    console.log(auth);
     updateProfile(auth.currentUser, {
       displayName: firstName,
     })
@@ -89,19 +91,31 @@ export const SignUp = () => {
   };
 
   // Save user info to the database
-  const saveInfoToDb = (formData) => {
-    const usersRef = (db, "users", formData.email);
-    setDoc(usersRef, {
-      fullName: formData.full_name,
-      email: formData.email,
-    })
-      .then(() => {
-        console.log("Saved to database");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  // const saveInfoToDb = (formData) => {
+  //   let userInfoRef = doc(
+  //     db,
+  //     "users",
+  //     formData.email,
+  //     "basicInfo",
+  //     formData.email
+  //   );
+  //   setDoc(
+  //     userInfoRef,
+  //     { ...formData, timeStamp: Timestamp.fromDate(new Date()) },
+  //     { merge: true }
+  //   )
+  //     .then((data) => {
+  //       console.log("Saved to database", data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  //   // const usersRef = (db, "users", formData.email);
+  //   // setDoc(usersRef, {
+  //   //   fullName: formData.full_name,
+  //   //   email: formData.email,
+  //   // })
+  // };
 
   return (
     <Container>

@@ -3,8 +3,8 @@ import React, { lazy, Suspense, useEffect, useState } from "react";
 import { SignIn, SignUp } from "../pages/Auth";
 import Protected from "./Protected";
 import { useSelector } from "react-redux";
-import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../utils/firebase";
+import { Toaster } from "react-hot-toast";
 
 const Dashboard = lazy(() => import("../pages/Dashboard"));
 const SharesInfo = lazy(() => import("../pages/SharesInfo"));
@@ -35,11 +35,12 @@ const AppRoutes = () => {
   const user = JSON.parse(localStorage.getItem("user"));
 
   const [userInfo, setUserInfo] = useState();
-
   // Triggers a state to have a page reload (updated user get passed thereafter, as a result of the reload)
   useEffect(() => {
     setUserInfo(userStoreInfo);
   }, [userStoreInfo]);
+
+  let isVerified = user?.apiKey;
 
   return (
     <Suspense>
@@ -48,7 +49,7 @@ const AppRoutes = () => {
           <Route
             index
             element={
-              <Protected isVerified={!user?.apiKey} path="/dashboard">
+              <Protected isVerified={!isVerified} path="/dashboard">
                 <SignIn />
               </Protected>
             }
@@ -56,7 +57,7 @@ const AppRoutes = () => {
           <Route
             path="register"
             element={
-              <Protected isVerified={!user?.apiKey} path="/dashboard">
+              <Protected isVerified={!isVerified} path="/dashboard">
                 <SignUp />
               </Protected>
             }
@@ -64,7 +65,7 @@ const AppRoutes = () => {
           <Route
             path="login"
             element={
-              <Protected isVerified={!user?.apiKey} path="/dashboard">
+              <Protected isVerified={!isVerified} path="/dashboard">
                 <SignIn />
               </Protected>
             }
@@ -75,7 +76,7 @@ const AppRoutes = () => {
           <Route
             path="dashboard"
             element={
-              <Protected isVerified={user?.apiKey}>
+              <Protected isVerified={isVerified}>
                 <Dashboard />
               </Protected>
             }
@@ -83,7 +84,7 @@ const AppRoutes = () => {
           <Route
             path="shares"
             element={
-              <Protected isVerified={user?.apiKey}>
+              <Protected isVerified={isVerified}>
                 <Outlet />
               </Protected>
             }
@@ -93,7 +94,7 @@ const AppRoutes = () => {
           <Route
             path="orders"
             element={
-              <Protected isVerified={user?.apiKey}>
+              <Protected isVerified={isVerified}>
                 <Orders />
               </Protected>
             }
@@ -101,7 +102,7 @@ const AppRoutes = () => {
           <Route
             path="account"
             element={
-              <Protected isVerified={user?.apiKey}>
+              <Protected isVerified={isVerified}>
                 <Outlet />
               </Protected>
             }
@@ -121,6 +122,41 @@ const AppRoutes = () => {
           </Route>
         </Route>
       </Routes>
+
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          className: "",
+          style: {
+            margin: "10px",
+            padding: "10px",
+            display: "inline-flex",
+            fontSize: "14px",
+            zIndex: 999999,
+          },
+          duration: 4000,
+          error: {
+            style: {
+              background: "#ff6363",
+              color: "white",
+            },
+            iconTheme: {
+              primary: "white",
+              secondary: "red",
+            },
+          },
+          success: {
+            style: {
+              background: "green",
+              color: "white",
+            },
+            iconTheme: {
+              primary: "white",
+              secondary: "green",
+            },
+          },
+        }}
+      />
     </Suspense>
   );
 };

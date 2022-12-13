@@ -11,9 +11,34 @@ import {
   Main,
   Middle,
 } from "./styled";
+import CoinbaseCommerceButton from "react-coinbase-commerce";
+import "react-coinbase-commerce/dist/coinbase-commerce-button.css";
+import { fundList } from "../../utils/config";
+import { savePaymentInfoToDb } from "../../utils/dbCalls";
 
 const Fund = () => {
-  const [amount, setAmount] = useState("");
+  // const [amount, setAmount] = useState("");
+
+  const handleLoad = () => {
+    console.log("Loaded");
+  };
+  const handleChargeSuccess = (data, amount) => {
+    console.log(data);
+    console.log("Charge is successful");
+    savePaymentInfoToDb({ ...data, amount: amount });
+  };
+  const handleChargeFailure = (data, amount) => {
+    console.log(data);
+    console.log("Charge has failed");
+    savePaymentInfoToDb({ ...data, amount });
+  };
+  const handlePaymentDetected = (data, amount) => {
+    console.log(data);
+    console.log("Payment is detected");
+  };
+  const handleModalClose = () => {
+    console.log("Modal is closed");
+  };
 
   return (
     <Container>
@@ -25,24 +50,42 @@ const Fund = () => {
             <span>Fund amount</span> (minimum deposit $10)
           </p>
           <AmountCards>
-            {[10, 15, 20, 30, 50, 100, 200].map((each, index) => (
-              <AmountCard
+            {fundList.map((each, index) => (
+              <CoinbaseCommerceButton
                 key={index}
-                tabIndex={0}
-                onClick={() => setAmount(each)}
+                checkoutId={each.checkoutID}
+                onLoad={handleLoad}
+                onChargeSuccess={(data) =>
+                  handleChargeSuccess(data, each.amount)
+                }
+                onChargeFailure={(data) =>
+                  handleChargeFailure(data, each.amount)
+                }
+                onPaymentDetected={(data) =>
+                  handlePaymentDetected(data, each.amount)
+                }
+                onModalClosed={handleModalClose}
+                className="paymentButton"
               >
-                ${each}
-              </AmountCard>
+                ${each.amount}
+              </CoinbaseCommerceButton>
+              // <AmountCard
+              //   key={index}
+              //   tabIndex={0}
+              //   onClick={() => setAmount(each)}
+              // >
+              //   ${each}
+              // </AmountCard>
             ))}
           </AmountCards>
-          <Input>
+          {/* <Input>
             <span>$</span>
             <input
               type="number"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
             />
-          </Input>
+          </Input> */}
         </Main>
         <Middle>
           <span>Fund channel</span>

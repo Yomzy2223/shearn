@@ -33,10 +33,31 @@ export const AmountCards = styled.div`
   display: flex;
   flex-flow: row wrap;
   gap: clamp(15px, 5vw, 45px);
+
+  * {
+    text-decoration: none !important;
+  }
+
+  .paymentButton {
+    cursor: pointer;
+    display: flex;
+    flex: 1;
+    padding: 10px 24px;
+    color: black;
+    background-color: #47a4ff;
+    border-radius: 5px;
+    transition: 0.2s all ease;
+    max-width: 80px;
+    border: none;
+
+    &:focus {
+      background-color: #a3d0fc;
+    }
+  }
 `;
 
 export const AmountCard = styled.div`
-  cursor: pointer;
+  /* cursor: pointer;
   display: flex;
   flex: 1;
   padding: 10px 24px;
@@ -48,7 +69,7 @@ export const AmountCard = styled.div`
 
   &:focus {
     background-color: #a3d0fc;
-  }
+  } */
 `;
 
 export const Input = styled.div`

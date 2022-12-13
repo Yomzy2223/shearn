@@ -204,3 +204,30 @@ export const newPasswordSchema = yup.object().shape({
 export const forgotPasswordSchema = yup.object().shape({
   email: yup.string().email("Please enter a valid email").required(),
 });
+
+export const fundList = [
+  {
+    amount: 10,
+    checkoutID: "ea6b2d54-fa4a-42e5-8baf-cea5d295db61",
+  },
+  {
+    amount: 15,
+    checkoutID: "ae6f1da3-bc56-40e9-83f3-723bb539c799",
+  },
+  {
+    amount: 20,
+    checkoutID: "8cadb7cf-9c97-4e62-893c-1c896499ccc6",
+  },
+  {
+    amount: 50,
+    checkoutID: "0beed73f-007a-4cc3-81af-7d867ca9c7e5",
+  },
+  {
+    amount: 100,
+    checkoutID: "6cbfd856-987c-42f3-9059-66e043b20263",
+  },
+  {
+    amount: 200,
+    checkoutID: "5fc4b525-d90c-4cee-9fed-18efb043a988",
+  },
+];

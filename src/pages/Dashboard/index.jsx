@@ -26,38 +26,41 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../../utils/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { Puff } from "react-loading-icons";
+import { getBalanceFromDb, getProductsFromDb } from "../../utils/dbCalls";
+import { mergeProductsInfo } from "../../utils/globalFunctions";
 
 const Dashboard = () => {
   const [shares, setShares] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const getProducts = async () => {
-    const products = await getDocs(collection(db, "products"));
-    return products.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-  };
-
-  const mergeProductsInfo = (primaryData, secondaryData) => {
-    let merged = [];
-    primaryData.forEach((data1, index) => {
-      secondaryData.forEach((data2) => {
-        if (data1.title === data2.title) merged[index] = { ...data1, ...data2 };
-      });
-    });
-    return merged;
-  };
+  const [balance, setBalance] = useState("--");
 
   const handleShares = async () => {
     setLoading(true);
-    const dbShares = await getProducts();
+    const dbShares = await getProductsFromDb();
     setLoading(false);
     const merged = mergeProductsInfo(dbShares, allShares);
-    setShares(merged);
     console.log(merged);
+    setShares(merged);
+    // console.log(merged);
   };
 
   useEffect(() => {
+    handleBalance();
     handleShares();
   }, []);
+
+  useEffect(() => {
+    if (loading === true) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 200000);
+    }
+  }, [loading]);
+
+  const handleBalance = async () => {
+    let balance = await getBalanceFromDb();
+    setBalance(balance);
+  };
 
   return (
     <Container>
@@ -74,7 +77,10 @@ const Dashboard = () => {
             <BalanceInfo>
               <Balance>
                 <p>My Balance</p>
-                <p>$500.00</p>
+                <p>
+                  {balance !== "--" && "$"}
+                  {balance}
+                </p>
               </Balance>
               <img src={DollarLogo} alt="$" />
             </BalanceInfo>

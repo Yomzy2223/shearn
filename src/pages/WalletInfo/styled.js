@@ -12,9 +12,21 @@ export const Container = styled.div`
 export const Body = styled.div`
   display: flex;
   flex-flow: column;
-  gap: 120px;
+  gap: 60px;
   padding: 0 24px;
   font-weight: 500;
+  color: #f6f7f9;
+
+  p {
+    :nth-of-type(2) {
+      font-weight: 400;
+      color: #acacac;
+      max-width: 100%;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
 `;
 
 export const InputWrapper = styled.div`

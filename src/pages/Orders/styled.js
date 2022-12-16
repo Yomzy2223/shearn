@@ -25,6 +25,12 @@ export const Body = styled.div`
   }
 `;
 
+export const Loading = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
+
 export const OrdersContainer = styled.div`
   display: flex;
   flex-flow: column;
@@ -41,9 +47,19 @@ export const OrdersContainer = styled.div`
   }
 
   > div {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 15px;
+    /* display: flex;
     flex-flow: row wrap;
     gap: 15px;
-    width: 100%;
+    width: 100%; */
+
+    @media screen and (max-width: 850px) {
+      grid-template-columns: auto auto;
+    }
+    @media screen and (max-width: 550px) {
+      grid-template-columns: auto;
+    }
   }
 `;

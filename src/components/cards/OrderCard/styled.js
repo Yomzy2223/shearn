@@ -39,9 +39,10 @@ export const Body = styled.div`
 export const Image = styled.div`
   display: flex;
   flex-flow: column;
+  gap: 10px;
 
   > p {
-    font-weight: 700;
+    font-weight: 600;
   }
   img {
     height: 94px;
@@ -49,7 +50,8 @@ export const Image = styled.div`
   > div {
     display: flex;
     flex-flow: row nowrap;
-    gap: 11px;
+    justify-content: center;
+    gap: 14px;
     color: #56fe8f;
 
     span {
@@ -61,4 +63,5 @@ export const Info = styled.div`
   display: flex;
   flex-flow: column;
   justify-content: space-between;
+  height: 100%;
 `;

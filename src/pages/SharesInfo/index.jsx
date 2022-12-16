@@ -12,7 +12,11 @@ import MainHeader from "../../components/header";
 import Modal from "../../components/modal";
 import BottomNav from "../../components/nav/BottomNav";
 import { allShares } from "../../utils/config";
-import { getProductsFromDb } from "../../utils/dbCalls";
+import {
+  buyShares,
+  getProductsFromDb,
+  saveBoughtShareInfo,
+} from "../../utils/dbCalls";
 import { mergeProductsInfo } from "../../utils/globalFunctions";
 import {
   Body,
@@ -25,7 +29,7 @@ import {
 } from "./styled";
 
 const SharesInfo = () => {
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const [open, setOpen] = useState(false);
   const [shareInfo, setShareInfo] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -40,7 +44,7 @@ const SharesInfo = () => {
     setQuantity(localQuantity);
   };
 
-  const handleShares = async () => {
+  const handleShare = async () => {
     setLoading(true);
     const dbShares = await getProductsFromDb();
     const shareInfoFromDb = dbShares.find(
@@ -55,19 +59,22 @@ const SharesInfo = () => {
   };
 
   useEffect(() => {
-    handleShares();
+    handleShare();
   }, []);
 
   const handleQuantity = (e) => {
     setQuantity(e.target.value);
   };
 
-  const handleModalOpen = () => {
-    setOpen(true);
-  };
-
   const handleModalClose = () => {
     setOpen(false);
+  };
+
+  const handleSharesBuy = async () => {
+    for (let i = 0; i < quantity; i++) {
+      let response = await buyShares(shareInfo);
+      setOpen(response.data === "success" ? true : false);
+    }
   };
 
   return (
@@ -133,7 +140,7 @@ const SharesInfo = () => {
             threshold.
           </p>
         </DetailedInfo>
-        <MainButton text="Buy Now" clickAction={handleModalOpen} />
+        <MainButton text="Buy Now" clickAction={handleSharesBuy} />
         <Modal
           text="Purchase Successful"
           open={open}

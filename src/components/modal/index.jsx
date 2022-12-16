@@ -40,5 +40,10 @@ const Container = styled.div`
     border: none;
     width: 100%;
     height: 49px;
+    transition: 0.3s all ease;
+
+    :focus {
+      transform: scale(0.9);
+    }
   }
 `;

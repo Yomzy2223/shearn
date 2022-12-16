@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Puff } from "react-loading-icons";
 import { NewAge } from "../../assets/images";
 import OrderCard from "../../components/cards/OrderCard";
 import { SummaryCard } from "../../components/cards/Summary";
@@ -6,10 +7,47 @@ import MainHeader from "../../components/header";
 import BottomNav from "../../components/nav/BottomNav";
 import { Footer } from "../../components/texts/Footer";
 import BlueContainer from "../../containers/BlueContainer";
+import { getBoughtSharesInfo } from "../../utils/dbCalls";
+import { formatAMPM } from "../../utils/globalFunctions";
 import { Section } from "../Dashboard/styled";
-import { Body, Container, OrdersContainer, Summary } from "./styled";
+import { Body, Container, Loading, OrdersContainer, Summary } from "./styled";
 
 const Orders = () => {
+  const [shares, setShares] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  // let sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+  const handleShares = async () => {
+    setLoading(true);
+    let shares = await getBoughtSharesInfo();
+    console.log(shares);
+    setShares(shares);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    handleShares();
+  }, []);
+
+  // const minute = 1000 * 60;
+  // const hour = minute * 60;
+  // const day = hour * 24;
+  // const year = day * 365;
+  // let date = new Date();
+  // let currYear = new Date().getFullYear();
+  // let currMonth = new Date().getMonth();
+  // let currDay = new Date().getDate();
+  let time = new Date();
+  console.log(time.getTime());
+
+  // console.log(currDay, currMonth, currYear);
+  // console.log(new Date().getTime());
+  // console.log(formatAMPM(date));
+  // console.log(
+  //   `${date.getHours()} / ${date.getMinutes()} / ${date.getSeconds()}- ${date.getDay()}`
+  // );
+
   return (
     <Container>
       <MainHeader />
@@ -33,21 +71,16 @@ const Orders = () => {
         <OrdersContainer>
           <h2>Orders:</h2>
           <div>
-            {[1, 2, 3, 4, 5].map((order, index) => (
-              <OrderCard
-                key={index}
-                date="05-08-2021"
-                time="11:58am"
-                orderNo="202234234234"
-                title="Sh-NEW AGE"
-                image={NewAge}
-                quantity={1}
-                price="20"
-                hourly="0.055"
-                total="52.8"
-                servingTime="40"
-              />
-            ))}
+            {loading && (
+              <Loading>
+                <Puff stroke="#56FE8F" fill="#56FE8F" width={60} height={60} />
+              </Loading>
+            )}
+            {shares
+              ?.sort((a, b) => a.date.seconds - b.date.seconds)
+              .map((order, index) => (
+                <OrderCard key={index} orderNo="202234234234" order={order} />
+              ))}
           </div>
         </OrdersContainer>
       </Body>

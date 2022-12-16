@@ -1,4 +1,5 @@
 import {
+  addDoc,
   collection,
   doc,
   getDoc,
@@ -8,7 +9,9 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
+import { toast } from "react-hot-toast";
 import { auth, db } from "./firebase";
+import { formatAMPM } from "./globalFunctions";
 
 // User information from local storage
 let userInfo = JSON.parse(localStorage.getItem("user"));
@@ -55,6 +58,9 @@ export const savePaymentInfoToDb = (MessageData) => {
     .then(() => {
       if (MessageData.event === "charge_confirmed") {
         setBalanceToDb(MessageData.amount, userInfo.email, "inc");
+        toast.success("Payment confirmed");
+      } else {
+        toast.error("Payment failed");
       }
       console.log(`Saved ${MessageData.event} information to database`);
     })
@@ -64,7 +70,7 @@ export const savePaymentInfoToDb = (MessageData) => {
 };
 
 // Set balance information to database
-export const setBalanceToDb = (amount, email, action) => {
+export const setBalanceToDb = async (amount, email, action) => {
   let accountRef = doc(db, "users", email, "userInfo", "accountInfo");
   if (action === "inc") {
     updateDoc(accountRef, { balance: increment(amount) }, { merge: true })
@@ -74,6 +80,8 @@ export const setBalanceToDb = (amount, email, action) => {
       .catch((error) => {
         console.log(error);
       });
+  } else if (action === "dec") {
+    updateDoc(accountRef, { balance: increment(-amount) }, { merge: true });
   } else {
     setDoc(accountRef, { balance: amount }, { merge: true })
       .then(() => {
@@ -117,4 +125,46 @@ export const getWalletAddressFromDb = async () => {
   let accountRef = doc(db, "users", userInfo.email, "userInfo", "accountInfo");
   const accountInfo = await getDoc(accountRef);
   return accountInfo.data().walletAddress;
+};
+
+export const buyShares = async (info) => {
+  let balance = await getBalanceFromDb();
+  console.log(info);
+  if (balance >= info.price) {
+    setBalanceToDb(info.price, userInfo.email, "dec")
+      .then(() => {
+        saveBoughtShareInfoToDb(info);
+        console.log("Database balance decremented");
+      })
+      .catch((error) => console.log(error));
+    return {
+      data: "success",
+    };
+  } else {
+    toast.error("Insufficient balance");
+    return {
+      error: "failed",
+    };
+  }
+};
+
+// Save bought shares information to the database
+export const saveBoughtShareInfoToDb = async (info) => {
+  let d = new Date();
+  let boughtSharesRef = collection(db, "users", userInfo.email, "boughtShares");
+  addDoc(boughtSharesRef, {
+    ...info,
+    time: formatAMPM(d),
+    date: Timestamp.fromDate(new Date()),
+  })
+    .then(() => console.log("Added Shares info to the database"))
+    .catch((error) => console.log(error));
+};
+
+// Save bought shares information to the database
+export const getBoughtSharesInfo = async () => {
+  let boughtSharesRef = collection(db, "users", userInfo.email, "boughtShares");
+  let shares = await getDocs(boughtSharesRef);
+  shares.docs.map((share) => console.log(share.data()));
+  return shares.docs.map((share) => share.data());
 };

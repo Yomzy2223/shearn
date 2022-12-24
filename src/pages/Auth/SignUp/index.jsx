@@ -21,6 +21,7 @@ import { doc, setDoc, Timestamp } from "firebase/firestore";
 import {
   saveRegInfoToDb,
   setBalanceToDb,
+  setIncomeToDb,
   updateBalanceToDb,
 } from "../../../utils/dbCalls";
 
@@ -52,6 +53,7 @@ export const SignUp = () => {
         });
         saveRegInfoToDb(formData);
         setBalanceToDb(0, formData.email);
+        setIncomeToDb(0, 0, formData.email);
         navigate("/dashboard");
         setLoading(false);
       })

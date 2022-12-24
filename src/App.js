@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { store } from "./redux/Store";
 import { setAuthInfo } from "./redux/Slices";
 import { useEffect } from "react";
+import { updateIncome } from "./utils/dbCalls";
 
 function App() {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -12,6 +13,10 @@ function App() {
   useEffect(() => {
     store.dispatch(setAuthInfo(user));
   }, [user]);
+
+  useEffect(() => {
+    updateIncome();
+  }, []);
 
   return (
     <div className="App">

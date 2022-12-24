@@ -18,3 +18,22 @@ export const formatAMPM = (date) => {
   var strTime = hours + ":" + minutes + " " + ampm;
   return strTime;
 };
+
+export const calcMillisecsDiff = (seconds) => {
+  let day = 1000 * 60 * 60 * 24;
+  let millisecsDiff = Date.now() - seconds * 1000;
+  return millisecsDiff;
+};
+
+export const getDaysToBeCredited = (share) => {
+  let day = 1000 * 60 * 60 * 24;
+  let currTime = Date.now();
+  let lastCreditedTime = share.incomeLastCreditedTime.seconds * 1000;
+  let timeDiff = currTime - lastCreditedTime;
+  let timeDiffInDays = Math.floor(timeDiff / day);
+  let creditedTime = Date.now() - (timeDiff % day);
+  return {
+    days: timeDiffInDays,
+    creditedTime: creditedTime,
+  };
+};

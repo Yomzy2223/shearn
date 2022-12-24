@@ -5,13 +5,14 @@ export const Container = styled.div`
   flex-flow: column;
   flex: 1;
   min-height: 200px;
+  max-height: 250px;
   min-width: 250px;
   max-width: 350px;
 `;
 export const Title = styled.div`
   display: flex;
   flex-flow: row wrap;
-  flex: 1;
+  /* flex: 1; */
   gap: 13px;
   background-color: #56fe8f;
   font-size: 15px;
@@ -28,6 +29,7 @@ export const Title = styled.div`
 export const Body = styled.div`
   display: flex;
   flex-flow: column;
+  flex: 1;
   gap: 10px;
   font-size: clamp(12px, 1.4vw, 14px);
   color: white;
@@ -46,6 +48,7 @@ export const Image = styled.div`
   }
   img {
     height: 94px;
+    max-width: 50%;
   }
   > div {
     display: flex;

@@ -7,46 +7,54 @@ import MainHeader from "../../components/header";
 import BottomNav from "../../components/nav/BottomNav";
 import { Footer } from "../../components/texts/Footer";
 import BlueContainer from "../../containers/BlueContainer";
-import { getBoughtSharesInfo } from "../../utils/dbCalls";
+import {
+  getBoughtSharesInfo,
+  getIncomeFromDb,
+  updateIncome,
+} from "../../utils/dbCalls";
 import { formatAMPM } from "../../utils/globalFunctions";
 import { Section } from "../Dashboard/styled";
 import { Body, Container, Loading, OrdersContainer, Summary } from "./styled";
 
 const Orders = () => {
   const [shares, setShares] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  // let sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+  const [loading, setLoading] = useState(true);
+  const [totalIncome, setTotalIncome] = useState("--");
+  const [dailyIncome, setDailyIncome] = useState("--");
 
   const handleShares = async () => {
-    setLoading(true);
+    // setLoading(true);
     let shares = await getBoughtSharesInfo();
-    console.log(shares);
-    setShares(shares);
+    // console.log(shares);
+    setShares(shares ? shares : []);
     setLoading(false);
   };
 
+  const handleIncome = async () => {
+    let incomeInfo = await getIncomeFromDb();
+    setTotalIncome(incomeInfo.total);
+    setDailyIncome(incomeInfo.daily);
+    console.log(incomeInfo);
+  };
+
   useEffect(() => {
+    updateIncome();
+    handleIncome();
     handleShares();
+    let interval = setInterval(() => {
+      handleShares();
+    }, 100000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
-  // const minute = 1000 * 60;
-  // const hour = minute * 60;
-  // const day = hour * 24;
-  // const year = day * 365;
-  // let date = new Date();
-  // let currYear = new Date().getFullYear();
-  // let currMonth = new Date().getMonth();
-  // let currDay = new Date().getDate();
-  let time = new Date();
-  console.log(time.getTime());
-
-  // console.log(currDay, currMonth, currYear);
-  // console.log(new Date().getTime());
-  // console.log(formatAMPM(date));
-  // console.log(
-  //   `${date.getHours()} / ${date.getMinutes()} / ${date.getSeconds()}- ${date.getDay()}`
-  // );
+  let date = new Date();
+  let min = 1000 * 60;
+  let hr = min * 60;
+  let day = hr * 24;
+  console.log(formatAMPM(date));
 
   return (
     <Container>
@@ -55,8 +63,8 @@ const Orders = () => {
         <SummaryCard
           text1="Total Income"
           text2="Daily Income"
-          price1={300}
-          price2={20}
+          price1={totalIncome}
+          price2={dailyIncome}
         />
         <Section>
           <ol>
@@ -76,11 +84,9 @@ const Orders = () => {
                 <Puff stroke="#56FE8F" fill="#56FE8F" width={60} height={60} />
               </Loading>
             )}
-            {shares
-              ?.sort((a, b) => a.date.seconds - b.date.seconds)
-              .map((order, index) => (
-                <OrderCard key={index} orderNo="202234234234" order={order} />
-              ))}
+            {shares.map((order, index) => (
+              <OrderCard key={index} orderNo="202234234234" order={order} />
+            ))}
           </div>
         </OrdersContainer>
       </Body>

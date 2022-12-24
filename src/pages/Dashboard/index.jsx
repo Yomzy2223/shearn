@@ -26,7 +26,12 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth, db } from "../../utils/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { Puff } from "react-loading-icons";
-import { getBalanceFromDb, getProductsFromDb } from "../../utils/dbCalls";
+import {
+  creditIncomeToDb,
+  getBalanceFromDb,
+  getProductsFromDb,
+  updateIncome,
+} from "../../utils/dbCalls";
 import { mergeProductsInfo } from "../../utils/globalFunctions";
 
 const Dashboard = () => {
@@ -47,6 +52,7 @@ const Dashboard = () => {
   useEffect(() => {
     handleBalance();
     handleShares();
+    creditIncomeToDb();
   }, []);
 
   useEffect(() => {

@@ -6,7 +6,7 @@ const OrderCard = ({ orderNo, order }) => {
   let timeDiff = Date.now() - order.date.seconds * 1000;
   let servingTimeInMilSec = order.lifeSpan * day;
   let timeLeftInMilSec = servingTimeInMilSec - timeDiff;
-  console.log(timeLeftInMilSec);
+  // console.log(timeLeftInMilSec);
 
   let timeDiffInDays = timeLeftInMilSec / day;
   let timeDiffInHrs = (timeDiffInDays - Math.floor(timeDiffInDays)) * 24;

@@ -1,3 +1,5 @@
+import { toast } from "react-hot-toast";
+
 export const mergeProductsInfo = (primaryData, secondaryData) => {
   let merged = [];
   primaryData.forEach((data1, index) => {
@@ -19,10 +21,12 @@ export const formatAMPM = (date) => {
   return strTime;
 };
 
-export const calcMillisecsDiff = (seconds) => {
-  let day = 1000 * 60 * 60 * 24;
-  let millisecsDiff = Date.now() - seconds * 1000;
-  return millisecsDiff;
+export const formatDayMonthYear = (date) => {
+  let day = date.getDate();
+  let month = date.getMonth();
+  let year = date.getFullYear();
+  let merged = `${day}-${month + 1}-${year}`;
+  return merged;
 };
 
 export const getDaysToBeCredited = (share) => {
@@ -36,4 +40,22 @@ export const getDaysToBeCredited = (share) => {
     days: timeDiffInDays,
     creditedTime: creditedTime,
   };
+};
+
+export const tryCatch = (fun) => {
+  try {
+    fun();
+  } catch (e) {
+    // if (
+    //   e ===
+    //   "FirebaseError: Failed to get document because the client is offline."
+    // ) {
+    toast.error("Please check your internet connection");
+    // }
+  }
+};
+
+export const handleError = (e) => {
+  if (e.toString().includes("client is offline"))
+    toast.error("Please check your internet  connection");
 };

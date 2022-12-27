@@ -5,14 +5,42 @@ import BottomNav from "../../components/nav/BottomNav";
 import { Footer } from "../../components/texts/Footer";
 import { Body, Container, Info, ReferralCode, ReferralTable } from "./styled";
 import { FaCopy } from "react-icons/fa";
+import { getIncomeFromDb, getReferralCodeFromDb } from "../../utils/dbCalls";
+import { handleError } from "../../utils/globalFunctions";
+import { useSelector } from "react-redux";
 
 const Referrals = () => {
   const [showCopied, setshowCopied] = useState(false);
+  const [daily, setDaily] = useState("--");
+  const [income, setIncome] = useState("--");
+  const [referralId, setReferralId] = useState("----");
 
-  const referralCode = useRef();
+  let userInfo = useSelector((store) => store.userInfo.authInfo);
+
+  let count = 0;
+
+  useEffect(() => {
+    if (count === 0) handlePulls();
+  }, []);
+
+  const handlePulls = async () => {
+    try {
+      let totalIncome = await getIncomeFromDb(userInfo.email);
+      let referralId = await getReferralCodeFromDb(userInfo.email);
+      setDaily(totalIncome.daily);
+      setIncome(totalIncome.total);
+      console.log(referralId);
+      setReferralId(referralId);
+      count++;
+    } catch (e) {
+      handleError(e);
+    }
+  };
+
+  const referralCodeRef = useRef();
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(referralCode.current.innerText);
+    navigator.clipboard.writeText(referralCodeRef.current.innerText);
     setshowCopied(true);
   };
 
@@ -23,23 +51,22 @@ const Referrals = () => {
         <SummaryCard
           text1="Total Income"
           text2="Daily Income"
-          price1={300}
-          price2={20}
+          price1={income}
+          price2={daily}
         />
-        <ReferralCode
-          onClick={handleCopy}
-          tabIndex={0}
-          onBlur={() => setshowCopied(false)}
-        >
-          <p ref={referralCode}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque,
-            enim quasi. Laborum neque odit veritatis nostrum earum aut, beatae
-            maxime! Voluptatibus iusto veniam natus animi dolorum. Atque fugit
-            rem explicabo minus omnis! Animi ad, quasi eveniet nulla deserunt
-          </p>
-          <FaCopy color="#56FE8F" fontSize={20} />
-          {showCopied && <p>Copied!</p>}
-        </ReferralCode>
+        {referralId && (
+          <ReferralCode
+            onClick={handleCopy}
+            tabIndex={0}
+            onBlur={() => setshowCopied(false)}
+          >
+            <p ref={referralCodeRef}>
+              <span>Referral code: </span> {referralId}
+            </p>
+            <FaCopy color="#56FE8F" fontSize={20} />
+            {showCopied && <p>Copied!</p>}
+          </ReferralCode>
+        )}
         <Info>
           <p>
             You get <span>10%</span> commision from your referrals first

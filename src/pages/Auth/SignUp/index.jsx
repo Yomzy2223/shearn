@@ -22,6 +22,7 @@ import {
   saveRegInfoToDb,
   setBalanceToDb,
   setIncomeToDb,
+  setReferralCodeToDb,
   updateBalanceToDb,
 } from "../../../utils/dbCalls";
 
@@ -52,6 +53,7 @@ export const SignUp = () => {
           console.log("Email verification sent");
         });
         saveRegInfoToDb(formData);
+        setReferralCodeToDb(formData.email);
         setBalanceToDb(0, formData.email);
         setIncomeToDb(0, 0, formData.email);
         navigate("/dashboard");

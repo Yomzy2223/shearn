@@ -10,14 +10,17 @@ import {
 } from "../../utils/dbCalls";
 import { Body, Bottom, BottomInfo, Container, InputWrapper } from "./styled";
 import { toast } from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 const WalletInfo = () => {
   const [walletAddress, setwalletAddress] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [loading, setLoading] = useState(false);
 
+  let userInfo = useSelector((store) => store.userInfo.authInfo);
+
   const getWalletAddress = async () => {
-    let address = await getWalletAddressFromDb();
+    let address = await getWalletAddressFromDb(userInfo.email);
     setwalletAddress(address);
     setwalletAddress(address);
     console.log(address);
@@ -26,10 +29,10 @@ const WalletInfo = () => {
   const saveWalletAddress = async () => {
     setLoading(true);
     if (walletAddress) {
-      await saveWalletAddressToDb(inputValue, "update");
+      await saveWalletAddressToDb(inputValue, "update", userInfo.email);
       toast.success("Wallet address updated successfully");
     } else {
-      await saveWalletAddressToDb(inputValue);
+      await saveWalletAddressToDb(inputValue, "", userInfo.email);
       toast.success("Wallet address saved successfully");
     }
     setLoading(false);

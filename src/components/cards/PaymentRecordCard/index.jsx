@@ -7,9 +7,9 @@ export const PaymentRecord = ({
   time,
   amount,
   wallet,
-  walletAddress,
-  $success,
-  $failed,
+  paymentId,
+  status,
+  share,
 }) => {
   return (
     <Container>
@@ -18,18 +18,22 @@ export const PaymentRecord = ({
       <Details>
         {title !== "Daily Earning" && (
           <>
+            <p>Payment ID: {paymentId ? paymentId : "----"}</p>
             <p>Wallet name: {wallet}</p>
-            <p>Wallet Address: {walletAddress}</p>
           </>
         )}
+        {title === "Daily Earning" && <p>Share: {share}</p>}
         <p>
-          Time: <span>{date}</span> <span>{time}</span>{" "}
+          Date (Time): <span>{date ? date : "----"}</span>{" "}
+          <span>{time ? time : "--"}</span>{" "}
         </p>
       </Details>
       {title !== "Daily Earning" && (
-        <Status $success={$success} $failed={$failed}>
-          {$success && "Success"}
-          {$failed && "Failed"}
+        <Status
+          $success={status?.toLowerCase() === "success"}
+          $failed={status?.toLowerCase() === "failed"}
+        >
+          {status ? status : "----"}
         </Status>
       )}
     </Container>

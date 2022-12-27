@@ -14,23 +14,25 @@ import {
 import CoinbaseCommerceButton from "react-coinbase-commerce";
 import "react-coinbase-commerce/dist/coinbase-commerce-button.css";
 import { fundList } from "../../utils/config";
-import { savePaymentInfoToDb } from "../../utils/dbCalls";
+import { fundAccount, updateFundNotification } from "../../utils/dbCalls";
+import { useSelector } from "react-redux";
 
 const Fund = () => {
-  // const [amount, setAmount] = useState("");
+  let userInfo = useSelector((store) => store.userInfo.authInfo);
 
   const handleLoad = () => {
     console.log("Loaded");
   };
+
   const handleChargeSuccess = (data, amount) => {
     console.log(data);
-    console.log("Charge is successful");
-    savePaymentInfoToDb({ ...data, amount: amount });
+    fundAccount({ ...data, amount: amount }, userInfo.email);
+    updateFundNotification({ ...data, amount: amount }, userInfo.email);
   };
   const handleChargeFailure = (data, amount) => {
     console.log(data);
-    console.log("Charge has failed");
-    savePaymentInfoToDb({ ...data, amount });
+    fundAccount({ ...data, amount }, userInfo.email);
+    updateFundNotification({ ...data, amount: amount }, userInfo.email);
   };
   const handlePaymentDetected = (data, amount) => {
     console.log(data);

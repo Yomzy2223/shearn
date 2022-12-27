@@ -29,15 +29,19 @@ import { Puff } from "react-loading-icons";
 import {
   creditIncomeToDb,
   getBalanceFromDb,
+  getIncomeFromDb,
   getProductsFromDb,
   updateIncome,
 } from "../../utils/dbCalls";
 import { mergeProductsInfo } from "../../utils/globalFunctions";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   const [shares, setShares] = useState([]);
   const [loading, setLoading] = useState(true);
   const [balance, setBalance] = useState("--");
+
+  let userInfo = useSelector((store) => store.userInfo.authInfo);
 
   const handleShares = async () => {
     setLoading(true);
@@ -52,7 +56,6 @@ const Dashboard = () => {
   useEffect(() => {
     handleBalance();
     handleShares();
-    creditIncomeToDb();
   }, []);
 
   useEffect(() => {
@@ -64,8 +67,9 @@ const Dashboard = () => {
   }, [loading]);
 
   const handleBalance = async () => {
-    let balance = await getBalanceFromDb();
-    setBalance(balance);
+    let balance = await getBalanceFromDb(userInfo.email);
+    let totalIncome = await getIncomeFromDb(userInfo.email);
+    setBalance(balance + totalIncome.total);
   };
 
   return (

@@ -1,17 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import MainHeader from "../../components/header";
 import BottomNav from "../../components/nav/BottomNav";
 import { Footer } from "../../components/texts/Footer";
+import { getIncomeFromDb } from "../../utils/dbCalls";
+import { handleError } from "../../utils/globalFunctions";
 import { BasicInfo, Body, Container, SubHeader } from "./styled";
 
 const PaymentsRecords = () => {
   let activeStyle = { borderBottom: "4px solid #56FE8F" };
+  const [totalIncome, setTotalIncome] = useState("--");
+
+  let userInfo = useSelector((store) => store.userInfo.authInfo);
 
   const path = useLocation().pathname;
   const pathArray = [...path];
   let index = pathArray.lastIndexOf("/");
   let slicedPath = path.slice(index + 1, pathArray.length);
+
+  useEffect(() => {
+    handleIncome();
+  }, []);
+
+  const handleIncome = async () => {
+    let incomeInfo = await getIncomeFromDb(userInfo.email);
+    setTotalIncome(incomeInfo.total);
+  };
 
   return (
     <Container>
@@ -28,7 +43,10 @@ const PaymentsRecords = () => {
         {slicedPath === "account" && (
           <BasicInfo>
             <p>Total Income</p>
-            <span>$500.00</span>
+            <span>
+              {totalIncome !== "--" && "$"}
+              {totalIncome}
+            </span>
           </BasicInfo>
         )}
         {slicedPath === "withdraw" && (

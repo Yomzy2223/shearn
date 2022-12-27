@@ -1,5 +1,6 @@
 import Dialog from "@mui/material/Dialog";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
   DollarIcon,
@@ -12,11 +13,7 @@ import MainHeader from "../../components/header";
 import Modal from "../../components/modal";
 import BottomNav from "../../components/nav/BottomNav";
 import { allShares } from "../../utils/config";
-import {
-  buyShares,
-  getProductsFromDb,
-  saveBoughtShareInfo,
-} from "../../utils/dbCalls";
+import { buyShares, getProductsFromDb } from "../../utils/dbCalls";
 import { mergeProductsInfo } from "../../utils/globalFunctions";
 import {
   Body,
@@ -35,6 +32,8 @@ const SharesInfo = () => {
   const [loading, setLoading] = useState(false);
 
   const { share } = useParams();
+
+  let userInfo = useSelector((store) => store.userInfo.authInfo);
 
   window.onbeforeunload = () => {
     localStorage.setItem("quantity", quantity);
@@ -72,7 +71,7 @@ const SharesInfo = () => {
 
   const handleSharesBuy = async () => {
     for (let i = 0; i < quantity; i++) {
-      let response = await buyShares(shareInfo);
+      let response = await buyShares(shareInfo, userInfo.email);
       setOpen(response.data === "success" ? true : false);
     }
   };

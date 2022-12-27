@@ -31,11 +31,15 @@ export const ReferralCode = styled.div`
   max-width: 100%;
   width: max-content;
 
+  span {
+    color: white;
+  }
   p {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 90%;
+    color: #56fe8f;
   }
   p:nth-of-type(2) {
     position: absolute;
@@ -45,6 +49,15 @@ export const ReferralCode = styled.div`
     box-shadow: 0 0 10px 4px #e1e1e122;
     border-radius: 8px;
     padding: 5px;
+    animation: copy 0.5s ease;
+  }
+  @keyframes copy {
+    0% {
+      filter: opacity(0);
+    }
+    100% {
+      filter: opacity(1);
+    }
   }
 `;
 

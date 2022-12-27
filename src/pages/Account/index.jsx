@@ -1,5 +1,6 @@
 import { signOut } from "firebase/auth";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { LogoutIcon, ShearnLogo } from "../../assets/images";
 import AccountMainCard from "../../components/cards/AccountMain";
@@ -9,10 +10,16 @@ import { Footer } from "../../components/texts/Footer";
 import { setAuthInfo } from "../../redux/Slices";
 import { store } from "../../redux/Store";
 import { AccountPageLinks } from "../../utils/config";
+import { getBalanceFromDb, getIncomeFromDb } from "../../utils/dbCalls";
 import { auth } from "../../utils/firebase";
 import { Body, Container, Header, Info } from "./styled";
 
 const Account = () => {
+  const [balance, setBalance] = useState("--");
+  const [income, setIncome] = useState("--");
+
+  let userInfo = useSelector((store) => store.userInfo.authInfo);
+
   const navigate = useNavigate();
 
   // Log the user out and navigate to the login page
@@ -24,6 +31,17 @@ const Account = () => {
     });
   };
 
+  useEffect(() => {
+    handleBalance();
+  }, []);
+
+  const handleBalance = async () => {
+    let balance = await getBalanceFromDb(userInfo.email);
+    let totalIncome = await getIncomeFromDb(userInfo.email);
+    setBalance(balance + totalIncome.total);
+    setIncome(totalIncome.total);
+  };
+
   return (
     <Container>
       <Header>
@@ -32,9 +50,9 @@ const Account = () => {
       <Body>
         <SummaryCard
           text1="My Balance"
-          text2="Daily Income"
-          price1={500}
-          price2={25}
+          text2="Total Income"
+          price1={balance}
+          price2={income}
         />
         <Info>
           {AccountPageLinks.map((each, index) => (

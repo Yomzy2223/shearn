@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Puff } from "react-loading-icons";
+import { useSelector } from "react-redux";
 import { NewAge } from "../../assets/images";
 import OrderCard from "../../components/cards/OrderCard";
 import { SummaryCard } from "../../components/cards/Summary";
 import MainHeader from "../../components/header";
 import BottomNav from "../../components/nav/BottomNav";
+import Empty from "../../components/texts/Empty";
 import { Footer } from "../../components/texts/Footer";
 import BlueContainer from "../../containers/BlueContainer";
 import {
@@ -12,7 +14,7 @@ import {
   getIncomeFromDb,
   updateIncome,
 } from "../../utils/dbCalls";
-import { formatAMPM } from "../../utils/globalFunctions";
+import { formatAMPM, handleError } from "../../utils/globalFunctions";
 import { Section } from "../Dashboard/styled";
 import { Body, Container, Loading, OrdersContainer, Summary } from "./styled";
 
@@ -22,25 +24,37 @@ const Orders = () => {
   const [totalIncome, setTotalIncome] = useState("--");
   const [dailyIncome, setDailyIncome] = useState("--");
 
+  let userInfo = useSelector((store) => store.userInfo.authInfo);
+
+  let count = 0;
+
   const handleShares = async () => {
-    // setLoading(true);
-    let shares = await getBoughtSharesInfo();
-    // console.log(shares);
-    setShares(shares ? shares : []);
-    setLoading(false);
+    try {
+      let shares = await getBoughtSharesInfo(userInfo.email);
+      setShares(shares ? shares : []);
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+      if (count === 0) handleError(e);
+      count++;
+    }
   };
 
   const handleIncome = async () => {
-    let incomeInfo = await getIncomeFromDb();
+    let incomeInfo = await getIncomeFromDb(userInfo.email);
     setTotalIncome(incomeInfo.total);
     setDailyIncome(incomeInfo.daily);
     console.log(incomeInfo);
   };
 
-  useEffect(() => {
-    updateIncome();
+  const handleAll = async () => {
+    await handleShares();
+    await updateIncome(userInfo.email);
     handleIncome();
-    handleShares();
+  };
+
+  useEffect(() => {
+    handleAll();
     let interval = setInterval(() => {
       handleShares();
     }, 100000);
@@ -83,6 +97,9 @@ const Orders = () => {
               <Loading>
                 <Puff stroke="#56FE8F" fill="#56FE8F" width={60} height={60} />
               </Loading>
+            )}
+            {shares.length === 0 && !loading && (
+              <Empty text="There are currently no bought shares" />
             )}
             {shares.map((order, index) => (
               <OrderCard key={index} orderNo="202234234234" order={order} />

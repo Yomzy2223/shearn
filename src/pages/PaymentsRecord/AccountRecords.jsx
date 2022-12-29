@@ -57,8 +57,8 @@ const AccountRecords = () => {
             wallet="USDT"
             walletAddress="dfdkfueijlkdjoefo434534"
             // date={new Date(info.time).getTime()}
-            date={formatDayMonthYear(new Date(info.time))}
-            time={formatAMPM(new Date(info.time))}
+            date={formatDayMonthYear(new Date(info.time.seconds * 1000))}
+            time={formatAMPM(new Date(info.time.seconds * 1000))}
             $success
           />
         ))

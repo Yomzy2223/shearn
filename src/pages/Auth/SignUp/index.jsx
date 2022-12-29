@@ -149,6 +149,7 @@ export const SignUp = () => {
             <PlainInput
               name="confirm_password"
               placeholder="Confirm Password"
+              type="password"
               register={register}
               error={errors.confirm_password?.message}
             />

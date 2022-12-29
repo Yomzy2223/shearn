@@ -3,24 +3,55 @@ import { SummaryCard } from "../../components/cards/Summary";
 import MainHeader from "../../components/header";
 import BottomNav from "../../components/nav/BottomNav";
 import { Footer } from "../../components/texts/Footer";
-import { Body, Container, Info, ReferralCode, ReferralTable } from "./styled";
+import {
+  Body,
+  Container,
+  Info,
+  InputWrapper,
+  ReferralCode,
+  ReferralTable,
+} from "./styled";
 import { FaCopy } from "react-icons/fa";
-import { getIncomeFromDb, getReferralCodeFromDb } from "../../utils/dbCalls";
+import {
+  getIncomeFromDb,
+  getReferralCodeFromDb,
+  getReferralEmailFromDb,
+  getReferredByCodeFromDb,
+  setReferredByCodeToDb,
+} from "../../utils/dbCalls";
 import { handleError } from "../../utils/globalFunctions";
 import { useSelector } from "react-redux";
+import { PlainInput } from "../../components/Input";
+import { MainButton } from "../../components/botton";
+import { toast } from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { referralSchema } from "../../utils/config";
 
 const Referrals = () => {
   const [showCopied, setshowCopied] = useState(false);
   const [daily, setDaily] = useState("--");
   const [income, setIncome] = useState("--");
-  const [referralId, setReferralId] = useState("----");
+  const [referralId, setReferralId] = useState("");
+  const [referredById, setReferredById] = useState("");
+  const [referred, setReferred] = useState(true);
+  const [refLoading, setRefLoading] = useState(false);
 
   let userInfo = useSelector((store) => store.userInfo.authInfo);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+  } = useForm({ resolver: yupResolver(referralSchema) });
 
   let count = 0;
 
   useEffect(() => {
-    if (count === 0) handlePulls();
+    handlePulls();
+    handleReferreredBy();
   }, []);
 
   const handlePulls = async () => {
@@ -29,12 +60,41 @@ const Referrals = () => {
       let referralId = await getReferralCodeFromDb(userInfo.email);
       setDaily(totalIncome.daily);
       setIncome(totalIncome.total);
-      console.log(referralId);
       setReferralId(referralId);
+      let referredBy = await getReferredByCodeFromDb();
+      console.log(referredBy);
       count++;
     } catch (e) {
-      handleError(e);
+      if (count === 0) handleError(e);
+      count++;
     }
+  };
+
+  const handleReferral = async (formData) => {
+    console.log(formData);
+    setRefLoading(true);
+    let userRefCode = await getReferralCodeFromDb(userInfo.email);
+    let refEmail = await getReferralEmailFromDb(referredById);
+    if (refEmail === false) toast.error("Referral code incorrect");
+    else if (referredById === userRefCode)
+      toast.error("You cannot refer yourself");
+    else {
+      const info = {
+        email: refEmail,
+        id: referredById,
+      };
+      await setReferredByCodeToDb(info, userInfo.email);
+      toast.success("Referral code set successfully");
+    }
+    setRefLoading(false);
+  };
+
+  const handleReferreredBy = async () => {
+    let referredBy = await getReferredByCodeFromDb(userInfo.email);
+    if (referredBy) {
+      setValue("referral", referredBy.email);
+      setReferred(true);
+    } else setReferred(false);
   };
 
   const referralCodeRef = useRef();
@@ -54,6 +114,17 @@ const Referrals = () => {
           price1={income}
           price2={daily}
         />
+        <InputWrapper onSubmit={handleSubmit(handleReferral)}>
+          <p>Referred by:</p>
+          <PlainInput
+            placeholder="Enter your referral's code"
+            onChange={(e) => setReferredById(e.target.value)}
+            name="referral"
+            register={register}
+            disable={referred}
+          />
+          {!referred && <MainButton text="Submit" loading={refLoading} />}
+        </InputWrapper>
         {referralId && (
           <ReferralCode
             onClick={handleCopy}

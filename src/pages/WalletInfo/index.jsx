@@ -66,9 +66,8 @@ const WalletInfo = () => {
             loading={false}
           />
           <BottomInfo>
-            Please type the information of your wallet address correctly. We
-            will not be responsible for capital loss caused by information
-            error.
+            Please enter your wallet address correctly. We will not be
+            responsible for capital loss caused by information error.
           </BottomInfo>
         </Bottom>
       </Body>

@@ -18,6 +18,17 @@ export const Body = styled.div`
   font-size: clamp(13px, 1.5vw, 15px);
 `;
 
+export const InputWrapper = styled.form`
+  display: flex;
+  flex-flow: column;
+  gap: 12px;
+
+  color: #56fe8f;
+  font-size: clamp(14px, 1.4vw, 16px);
+
+  margin-bottom: 100px;
+`;
+
 export const ReferralCode = styled.div`
   cursor: pointer;
   position: relative;

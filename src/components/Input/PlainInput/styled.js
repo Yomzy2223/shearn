@@ -29,4 +29,7 @@ export const Input = styled.input`
     outline: none;
     box-shadow: 0 0 5px 1px #56fe8f;
   }
+  &:disabled {
+    color: #c5c5c5;
+  }
 `;

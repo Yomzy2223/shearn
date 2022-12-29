@@ -33,7 +33,7 @@ import {
   getProductsFromDb,
   updateIncome,
 } from "../../utils/dbCalls";
-import { mergeProductsInfo } from "../../utils/globalFunctions";
+import { handleError, mergeProductsInfo } from "../../utils/globalFunctions";
 import { useSelector } from "react-redux";
 
 const Dashboard = () => {
@@ -145,7 +145,7 @@ const Dashboard = () => {
                   path={`shares/${share.title}`}
                 />
               ))}
-            {!loading && (
+            {shares.length > 0 && (
               <SharesCard
                 title="Coming soon..."
                 image="--"
@@ -156,7 +156,7 @@ const Dashboard = () => {
                 path="dashboard"
               />
             )}
-            {!loading && (
+            {shares.length > 0 && (
               <SharesCard
                 title="Coming soon..."
                 image="--"

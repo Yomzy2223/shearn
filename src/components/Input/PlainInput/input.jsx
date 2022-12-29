@@ -8,17 +8,24 @@ export const PlainInput = ({
   register,
   error,
   onChange,
+  disable,
 }) => {
   return (
     <InputWrapper>
       <Error>{error}</Error>
       {register ? (
-        <Input type={type} placeholder={placeholder} {...register(name)} />
+        <Input
+          type={type}
+          placeholder={placeholder}
+          {...register(name)}
+          disabled={disable}
+        />
       ) : (
         <Input
           type={type}
           placeholder={placeholder}
           onChange={onChange ? onChange : () => {}}
+          disabled={disable}
         />
       )}
     </InputWrapper>

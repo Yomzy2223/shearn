@@ -214,8 +214,8 @@ export const getIncomeFromDb = async (email) => {
   let accountInfoRef = doc(db, "users", email, "userInfo", "accountInfo");
   const accountInfo = await getDoc(accountInfoRef);
   let income = {
-    total: accountInfo.data().totalIncome,
-    daily: accountInfo.data().dailyIncome,
+    total: parseFloat(accountInfo.data().totalIncome.toFixed(2)),
+    daily: parseFloat(accountInfo.data().dailyIncome.toFixed(2)),
   };
   return income;
 };

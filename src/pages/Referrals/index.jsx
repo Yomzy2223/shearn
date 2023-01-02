@@ -13,10 +13,12 @@ import {
 } from "./styled";
 import { FaCopy } from "react-icons/fa";
 import {
+  getAccountInfo,
+  getBasicInfo,
   getIncomeFromDb,
   getReferralCodeFromDb,
   getReferralEmailFromDb,
-  getReferredByCodeFromDb,
+  getRefInfo,
   setReferredByCodeToDb,
 } from "../../utils/dbCalls";
 import { handleError } from "../../utils/globalFunctions";
@@ -30,10 +32,10 @@ import { referralSchema } from "../../utils/config";
 
 const Referrals = () => {
   const [showCopied, setshowCopied] = useState(false);
-  const [daily, setDaily] = useState("--");
-  const [income, setIncome] = useState("--");
+  const [refIncome, setRefIncome] = useState("--");
+  const [totalIncome, setTotalIncome] = useState("--");
   const [referralId, setReferralId] = useState("");
-  const [referredById, setReferredById] = useState("");
+  const [referrals, setReferrals] = useState([]);
   const [referred, setReferred] = useState(true);
   const [refLoading, setRefLoading] = useState(false);
 
@@ -56,13 +58,11 @@ const Referrals = () => {
 
   const handlePulls = async () => {
     try {
-      let totalIncome = await getIncomeFromDb(userInfo.email);
-      let referralId = await getReferralCodeFromDb(userInfo.email);
-      setDaily(totalIncome.daily);
-      setIncome(totalIncome.total);
+      let accountInfo = await getAccountInfo(userInfo.email);
+      let referralId = accountInfo.referralId;
+      setRefIncome(accountInfo.referralIncome);
+      setTotalIncome(accountInfo.totalIncome);
       setReferralId(referralId);
-      let referredBy = await getReferredByCodeFromDb();
-      console.log(referredBy);
       count++;
     } catch (e) {
       if (count === 0) handleError(e);
@@ -71,30 +71,35 @@ const Referrals = () => {
   };
 
   const handleReferral = async (formData) => {
-    console.log(formData);
     setRefLoading(true);
-    let userRefCode = await getReferralCodeFromDb(userInfo.email);
-    let refEmail = await getReferralEmailFromDb(referredById);
+    let accountInfo = await getAccountInfo(userInfo.email);
+    let refEmail = await getRefInfo(formData.referral);
+    console.log(refEmail);
     if (refEmail === false) toast.error("Referral code incorrect");
-    else if (referredById === userRefCode)
+    else if (formData.referral === accountInfo.referralId)
       toast.error("You cannot refer yourself");
     else {
       const info = {
         email: refEmail,
-        id: referredById,
+        id: formData.referral,
       };
       await setReferredByCodeToDb(info, userInfo.email);
       toast.success("Referral code set successfully");
+      setReferred(true);
+      handleReferreredBy();
     }
     setRefLoading(false);
   };
 
   const handleReferreredBy = async () => {
-    let referredBy = await getReferredByCodeFromDb(userInfo.email);
+    let accountInfo = await getAccountInfo(userInfo.email);
+    let referredBy = accountInfo?.referredByInfo;
     if (referredBy) {
-      setValue("referral", referredBy.email);
+      let refBasicInfo = await getBasicInfo(referredBy?.email);
+      setValue("referral", refBasicInfo.full_name);
       setReferred(true);
     } else setReferred(false);
+    setReferrals(accountInfo?.referrals);
   };
 
   const referralCodeRef = useRef();
@@ -110,15 +115,15 @@ const Referrals = () => {
       <Body>
         <SummaryCard
           text1="Total Income"
-          text2="Daily Income"
-          price1={income}
-          price2={daily}
+          text2="Referral Income"
+          price1={totalIncome}
+          price2={refIncome}
         />
         <InputWrapper onSubmit={handleSubmit(handleReferral)}>
           <p>Referred by:</p>
           <PlainInput
             placeholder="Enter your referral's code"
-            onChange={(e) => setReferredById(e.target.value)}
+            // onChange={(e) => setreferredByInfo(e.target.value)}
             name="referral"
             register={register}
             disable={referred}
@@ -180,7 +185,14 @@ const Referrals = () => {
               <td>Shares bought</td>
               <td>Commission</td>
             </tr>
-            <tr>
+            {referrals.map((referral, index) => (
+              <tr key={index}>
+                <td>{referral.name || "--"}</td>
+                <td>{referral.share || "--"}</td>
+                <td>{referral.commission || "--"}</td>
+              </tr>
+            ))}
+            {/* <tr>
               <td>Ohracu</td>
               <td>$40</td>
               <td>$4</td>
@@ -189,7 +201,7 @@ const Referrals = () => {
               <td>Amos</td>
               <td>$100</td>
               <td>$10</td>
-            </tr>
+            </tr> */}
           </tbody>
         </ReferralTable>
       </Body>

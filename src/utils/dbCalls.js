@@ -14,7 +14,11 @@ import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import uuid from "react-uuid";
 import { auth, db } from "./firebase";
-import { formatAMPM, getDaysToBeCredited } from "./globalFunctions";
+import {
+  formatAMPM,
+  getDaysToBeCredited,
+  handleError,
+} from "./globalFunctions";
 //
 //
 //
@@ -46,40 +50,22 @@ export const saveRegInfoToDb = (formData) => {
     });
 };
 
-// Create and save referral code to the database
-export const setReferralCodeToDb = (email) => {
-  let accountInfoRef = doc(db, "users", email, "userInfo", "accountInfo");
-  let referralsGlobalRef = doc(db, "globalInfo", "referralCodes");
-  const referralId = uuid();
-  setDoc(accountInfoRef, { referralId: referralId }, { merge: true })
-    .then(() => console.log("Referral code set to the database"))
-    .catch((e) => console.log(e));
-  setDoc(referralsGlobalRef, { [email]: referralId }, { merge: true });
+// Get basic information from the database
+export const getBasicInfo = async (email) => {
+  let userInfoRef = doc(db, "users", email, "userInfo", "basicInfo");
+  let userInfo = await getDoc(userInfoRef);
+  return userInfo.data();
 };
 
-// Create and save referral code to the database
-export const getReferralCodeFromDb = async (email) => {
-  let accountInfoRef = doc(db, "users", email, "userInfo", "accountInfo");
-  const accountInfo = await getDoc(accountInfoRef);
-  return accountInfo?.data().referralId;
+// Get account information from the database
+export const getAccountInfo = async (email) => {
+  let userInfoRef = doc(db, "users", email, "userInfo", "accountInfo");
+  let userInfo = await getDoc(userInfoRef);
+  return userInfo.data();
 };
 
-// Create and save referral code to the database
-export const setReferredByCodeToDb = (info, email) => {
-  let accountInfoRef = doc(db, "users", email, "userInfo", "accountInfo");
-  setDoc(accountInfoRef, { referredById: info }, { merge: true })
-    .then(() => console.log("Referred by code set to the database"))
-    .catch((e) => console.log(e));
-};
-
-// Create and save referral code to the database
-export const getReferredByCodeFromDb = async (email) => {
-  let accountInfoRef = doc(db, "users", email, "userInfo", "accountInfo");
-  const accountInfo = await getDoc(accountInfoRef);
-  return accountInfo?.data().referredById;
-};
-
-export const getReferralEmailFromDb = async (code) => {
+// Get account information from the database
+export const getRefInfo = async (code) => {
   let referralsRef = doc(db, "globalInfo", "referralCodes");
   let refCodes = await getDoc(referralsRef);
   let refCodesData = refCodes.data();
@@ -88,6 +74,64 @@ export const getReferralEmailFromDb = async (code) => {
   let refInfo = referralInfo[0];
   return refInfo ? refInfo[0] : false;
 };
+
+// Create and save referral code to the database
+export const setReferralCodeToDb = (email) => {
+  let accountInfoRef = doc(db, "users", email, "userInfo", "accountInfo");
+  let referralsGlobalRef = doc(db, "globalInfo", "referralCodes");
+  const referralId = uuid();
+  setDoc(
+    accountInfoRef,
+    { referralId: referralId, referrals: [] },
+    { merge: true }
+  )
+    .then(() => console.log("Referral code set to the database"))
+    .catch((e) => console.log(e));
+  setDoc(referralsGlobalRef, { [email]: referralId }, { merge: true });
+};
+
+// Create and save referral code to the database
+export const setReferredByCodeToDb = async (info, email) => {
+  let referralAccountRef = doc(
+    db,
+    "users",
+    info?.email,
+    "userInfo",
+    "accountInfo"
+  );
+  let accountInfoRef = doc(db, "users", email, "userInfo", "accountInfo");
+  setDoc(
+    accountInfoRef,
+    { referredByInfo: info, referralIncome: 0 },
+    { merge: true }
+  )
+    .then(() => console.log("Referred by code set to the database"))
+    .catch((e) => {
+      console.log(e);
+      handleError(e);
+    });
+  let basicInfo = await getBasicInfo(email);
+  let refInfo = {
+    email: email,
+    name: basicInfo.full_name,
+    share: 0,
+    commission: 0,
+  };
+  updateDoc(referralAccountRef, { referrals: arrayUnion(refInfo) }).then(() =>
+    console.log("Added email to referral's list")
+  );
+};
+
+// export const updateReferrals = async (info, email) => {
+//   let accountInfoRef = doc(db, "users", email, "userInfo", "accountInfo");
+//   let accountInfo = await getAccountInfo(email)
+//   let refInfo = {
+//     email: email,
+//     name: basicInfo.full_name,
+//     share: increment(info.share),
+//     commission: increment((info.share)/10),
+//   };
+// }
 
 // Save payment information to the database
 export const fundAccount = (MessageData, email) => {
